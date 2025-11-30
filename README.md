@@ -1,10 +1,15 @@
 # code_reload (⚠ WIP)
 
-Library for hotreload in Rust.
-It's primarily intended to speed-up development process.
-It's not recommended to use it in release.
+Library for hotreload in Rust. Hotreload allows you to change your code without restarting application.
 
-// TODO - add cool but short demo gif
+Though you can use it in `--release` build, it's primarily intended to speed-up development process and shouldn't be
+used in production.
+
+Usage with [software renderer](https://github.com/alordash/renderust):  
+<img src="media/hotreload_renderust.gif" width="500"/>
+
+Usage with [bevy example](https://bevy.org/examples/2d-rendering/move-sprite/):  
+<img src="media/hotreload_bevy.gif" width="500"/>
 
 ## Simple usage (slower)
 
@@ -36,8 +41,8 @@ fn add(a: i32, b: i32) -> i32 {
 }
 ```
 
-Run your binary application, change `add` function and then try to rebuild it without stopping. You should see that
-`add` now returns different value!
+Run your binary application, change `add` function and then try to rebuild it without stopping running application. You
+should see that `add` now returns different value!
 
 ### Downside (why slower)
 
@@ -45,12 +50,15 @@ This approach makes it so that each call to function labeled with `#[hotreload]`
 searches this method there, calls it and unloads library, which is of course very slow.
 
 But there is faster approach! We don't need to load/unload dynamic library with each call, we can keep it in memory and
-reload whenever new version is built. Next section tells how to utilize this approach.
+reload only when new version is available. Next section tells how to utilize this approach.
 
-## Runtime usage (faster)
+## `runtime` feature usage (faster)
+
+This approach is only more complicated in that it requires more to do in one time setup. After you've completed set up
+you'll only need to add `#[hotreload(runtime)]` to your functions just like in simple approach.
 
 Your crate must be `lib` crate. You can have separate binaries in it though.  
-This approach also uses `build` script.  
+This approach also uses [build script](https://doc.rust-lang.org/cargo/reference/build-scripts.html) (later on that).  
 Steps to use this library:
 
 1. Add `code_reload` with `runtime` feature to `Cargo.toml` dependencies and build dependencies:
@@ -70,7 +78,8 @@ code_reload = { version = "*", features = ["runtime"] }
 crate-type = ["cdylib", "lib"]
 ```
 
-3. Add `code_reload::runtime::build()` to your build script (file `build.rs` in the root of your crate). This function
+3. Add `code_reload::runtime::build()` to your build script (the `build.rs` file in the root of your crate). This
+   function
    parses your code and generates dynamic library wrapper structures that hold pointers to hotreloadable functions.
 
 ```rust
@@ -80,7 +89,10 @@ fn main() {
 }
 ```
 
-4. Add `code_reload::runtime::start_watchers!(your_crate_name)` somewhere in your binary's `main` function. This spawns
+4. Add `code_reload::runtime::add_runtime!();` anywhere in your crate's root (presumably in `lib.rs` file, if you're not
+   sure see [examples](examples)).
+
+5. Add `code_reload::runtime::start_watchers!(your_crate_name)` somewhere in your binary's `main` function. This spawns
    watcher
    that looks after your dynamic library file and reloads dynamic library when it changes. `your_crate_name` is either
    `package.name` from `Cargo.toml` or just `crate` if your binary is located in the same place as your library's code.
@@ -93,7 +105,7 @@ fn main() {
 }
 ```
 
-5. Label function you want to make hotreloadable with `#[hotreload(runtime)]` attribute:
+6. Label function you want to make hotreloadable with `#[hotreload(runtime)]` attribute:
 
 ```rust
 use code_reload::hotreload;
@@ -113,14 +125,15 @@ You can see usage examples in [examples](examples) directory.
 
 ## Limitations
 
-TODO - write about them (there are quite a few unfortunately)
+See [LIMITATIONS.md](LIMITATIONS.md) (yes, unfortunately there are enough of them for justifying creation of separate
+file, but their number could be reduced in future).
 
 ## Benchmarks
 
-Benchmarks are located in [benchmarks](benchmarks) folder. You can run them to see the execution time difference between
-no hotreload, simple hotreload and runtime hotreload invocation of same function.
+Benchmarks are located in [benchmarks](benchmarks) folder. You can run them to see the execution time of no hotreload,
+simple hotreload and runtime hotreload invocation of same function that calculates Fibonacci numbers.
 
-Here are benchmark results from my local PC (i7-14700HX):
+Here is random sample of benchmark results from my PC (i7-14700HX):
 
 ```
 no hotreload fibonacci time:        [16.245 ns 16.348 ns 16.469 ns]
@@ -132,5 +145,4 @@ runtime hotreload fibonacci time:   [19.498 ns 19.692 ns 19.917 ns]
 
 #### // TODO
 
-- [ ] write about limitations
 - [ ] write about `code_reload::runtime::build` for tests and separate directories
