@@ -50,10 +50,6 @@ impl IFnDataFactory for FnDataFactory {
         let generated_function_expr_call = self
             .fn_processor
             .get_call_expr(&source_function_variable_name, &source_fn_syntax.sig.inputs);
-        println!(
-            "generated_function_expr_call: {:?}",
-            generated_function_expr_call.to_token_stream().to_string()
-        );
         let library_opening_error_format = self
             .error_formatter
             .get_library_opening_error_format(&dynamic_library_filename);

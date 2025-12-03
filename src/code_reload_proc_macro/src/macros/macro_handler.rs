@@ -24,6 +24,10 @@ impl IMacroHandler for MacroHandler {
         proc_macro_attribute: TokenStream,
         proc_macro_item: TokenStream,
     ) -> TokenStream {
+        if code_reload_core::profile::is_debug() {
+            return proc_macro_item;
+        }
+
         let call_site = proc_macro::Span::call_site();
         let relative_file_path =
             SourceCodeId::get_source_code_relative_file_path(&call_site.local_file().unwrap());

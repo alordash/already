@@ -1,3 +1,4 @@
+use crate::debug_log::log;
 use crate::library::IFileProcessor;
 use crate::library::impl_type_exporter::IImplTypeExporter;
 use crate::{IOutputGenerator, IOutputWriter, ISourceFilePathsProvider};
@@ -34,6 +35,10 @@ impl ILibraryBuilder for LibraryBuilder {
 
 impl LibraryBuilder {
     fn build_core(&self, code_dir_name: &str) {
+        if !code_reload_core::profile::is_debug() {
+            return;
+        }
+
         let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
         let code_dir = Path::new(&manifest_dir).join(code_dir_name);
         let rust_file_paths = self.source_file_paths_provider.provide(&code_dir);
