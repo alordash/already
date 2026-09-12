@@ -3,6 +3,7 @@ use quote::ToTokens;
 use syn::*;
 
 mod build_profile;
+mod caller_crate_name;
 mod generation;
 
 #[proc_macro_attribute]
