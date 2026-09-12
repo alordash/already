@@ -98,7 +98,7 @@ fn main() {
    `package.name` from `Cargo.toml` or just `crate` if your binary is located in the same place as your library's code.
 
 ```rust
-// main.rs
+// bin.rs
 fn main() {
     code_reload::runtime::start_watchers!(your_crate_name);
     // your code

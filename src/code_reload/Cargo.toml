@@ -1,19 +1,6 @@
 [package]
 name = "code_reload"
-version = "0.1.3"
+version = "0.2.0"
 edition = "2024"
-description = "Library for easy hotreload of Rust code."
-license = "MIT"
-homepage = "https://github.com/alordash/code_reload"
-repository = "https://github.com/alordash/code_reload"
-readme = "../README.md"
 
 [dependencies]
-code_reload_core = { workspace = true }
-code_reload_proc_macro = { workspace = true }
-code_reload_build = { workspace = true, optional = true }
-mockall.workspace = true
-mockall_double = "0.3.1"
-
-[features]
-runtime = ["dep:code_reload_build"]

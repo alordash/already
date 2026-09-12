@@ -1,7 +1,14 @@
-use code_reload::hotreload;
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
 
-#[hotreload]
-pub fn add(mut a: i32, b: i32) -> i32 {
-    a += 1;
-    a + b
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
 }

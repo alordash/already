@@ -1,16 +1,14 @@
-// #![feature(proc_macro_span)]
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
 
-use crate::di::SERVICES;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-mod di;
-mod macros;
-
-#[proc_macro_attribute]
-pub fn hotreload(
-    proc_macro_attribute: proc_macro::TokenStream,
-    proc_macro_item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    let macro_handler = &SERVICES.macro_handler;
-
-    macro_handler.handle(proc_macro_attribute, proc_macro_item)
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
 }

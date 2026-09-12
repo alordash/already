@@ -1,10 +1,14 @@
-mod library_wrapper;
-mod source_code_id;
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
 
-pub mod constants;
-pub mod library_filename;
-pub mod services;
-pub mod profile;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-pub use library_wrapper::*;
-pub use source_code_id::*;
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}

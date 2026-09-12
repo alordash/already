@@ -1,16 +1,6 @@
 [package]
 name = "code_reload_core"
-version = "0.1.3"
+version = "0.2.0"
 edition = "2024"
-description = "Common stuff for code_reload."
-license = "MIT"
-homepage = "https://github.com/alordash/code_reload"
-repository = "https://github.com/alordash/code_reload"
-readme = "README.md"
 
 [dependencies]
-proc-macro2 = { workspace = true }
-quote = { workspace = true }
-syn = { workspace = true, features = ["full"] }
-
-libloading = { workspace = true }
