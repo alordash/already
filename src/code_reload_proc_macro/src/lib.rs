@@ -1,14 +1,13 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod build_profile;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+#[proc_macro_attribute]
+pub fn hotreload(
+    proc_macro_attribute: proc_macro::TokenStream,
+    proc_macro_item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    if build_profile::is_debug() {
+        return proc_macro_item;
     }
+
+    return proc_macro_item;
 }

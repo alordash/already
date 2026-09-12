@@ -3,4 +3,14 @@ name = "code_reload_proc_macro"
 version = "0.2.0"
 edition = "2024"
 
+[lib]
+proc-macro = true
+
 [dependencies]
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+syn = { workspace = true }
+
+[lints.clippy]
+needless_return = "allow"
+match_like_matches_macro = "allow"
