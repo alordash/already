@@ -1,1 +1,1 @@
-pub(crate) mod simple_hotreload_infrastructure;
+pub(crate) mod simple;

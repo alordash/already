@@ -1,21 +1,23 @@
 pub struct LibraryWrapper {
-    library_name: &'static str,
+    library_file_name: &'static str,
     inner: libloading::Library,
 }
 
 impl LibraryWrapper {
-    pub fn new(library_name: &'static str) -> Self {
-        let dynamic_library_path = std::env::current_exe()
+    pub fn new(library_file_name: &'static str) -> Self {
+        let dynamic_library_dir = std::env::current_exe()
             .expect("Unable to get current executable path from `std::env::current_exe()`.")
             .parent()
             .expect("Unable to get parent directory of current executable")
             .to_owned();
+        let dynamic_library_path = dynamic_library_dir.join(library_file_name);
         let inner = unsafe {
-            libloading::Library::new(dynamic_library_path)
-                .unwrap_or_else(|e| panic!("Error opening shared library '{library_name}': {e:?}"))
+            libloading::Library::new(dynamic_library_path).unwrap_or_else(|e| {
+                panic!("Error opening shared library '{library_file_name}' in directory '{dynamic_library_dir:?}': {e:?}")
+            })
         };
         let result = Self {
-            library_name,
+            library_file_name,
             inner,
         };
         return result;
@@ -27,7 +29,7 @@ impl LibraryWrapper {
                 panic!(
                     "Error finding symbol '{}', in shared library '{}': {:?}",
                     String::from_utf8_lossy(symbol),
-                    self.library_name,
+                    self.library_file_name,
                     e
                 )
             })

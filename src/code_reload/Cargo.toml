@@ -4,4 +4,5 @@ version = "0.2.0"
 edition = "2024"
 
 [dependencies]
+code_reload_core = { workspace = true }
 code_reload_proc_macro = { workspace = true }

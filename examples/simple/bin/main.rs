@@ -1,12 +1,10 @@
-use code_reload::hotreload;
+use simple::foo;
 
 fn main() {
-    let result = foo(10);
-    dbg!(result);
+    loop {
+        let result = foo(10);
+        dbg!(result);
+        std::thread::sleep(core::time::Duration::from_millis(300));
+    }
     println!("well hello there");
-}
-
-#[hotreload]
-fn foo(v: i32) -> i32 {
-    v + 1
 }

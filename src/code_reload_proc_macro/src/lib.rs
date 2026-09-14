@@ -1,9 +1,8 @@
 use crate::generation::targets::*;
-use quote::ToTokens;
+use code_reload_syn_core::*;
+use quote::{ToTokens, quote};
 use syn::*;
 
-mod build_profile;
-mod caller_crate_name;
 mod generation;
 
 #[proc_macro_attribute]
@@ -17,7 +16,14 @@ pub fn hotreload(
         return item_fn.to_token_stream().into();
     }
 
-    let result = simple_hotreload_infrastructure::generate(item_fn);
+    let simple::Result {
+        substitute_function,
+        source_function,
+    } = simple::generate(item_fn);
 
+    let result = quote! {
+        #substitute_function
+        #source_function
+    };
     return result.to_token_stream().into();
 }
