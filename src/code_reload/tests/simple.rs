@@ -14,11 +14,9 @@ fn SimpleHotreload_Works() -> std::io::Result<()> {
             "Unable to read project root path from env var '{CARGO_MANIFEST_DIR_VAR_NAME}': {e:?}"
         )
     }));
-    dbg!(&code_reload_dir);
     let source_simple_dir = code_reload_dir.join("tests").join("simple");
     let target_dir = tempdir()?;
 
-    dbg!(&target_dir);
     dircpy::copy_dir(source_simple_dir, &target_dir)?;
 
     let target_toml = target_dir.path().join("Cargo.toml");
@@ -43,7 +41,7 @@ fn SimpleHotreload_Works() -> std::io::Result<()> {
         .stdout
         .as_mut()
         .expect("Cargo run process must have stdout");
-    run_process_stdout.read(&mut [0u8])?;
+    run_process_stdout.read_exact(&mut [0u8])?;
     std::fs::write(
         target_lib,
         r#"#[code_reload::hotreload]
