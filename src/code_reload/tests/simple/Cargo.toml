@@ -7,7 +7,9 @@ edition = "2024"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
-code_reload = { workspace = true }
+code_reload = { path = "../.." }
+
+[workspace]
 
 [[bin]]
 name = "main"

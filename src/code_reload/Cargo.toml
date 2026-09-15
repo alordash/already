@@ -6,3 +6,7 @@ edition = "2024"
 [dependencies]
 code_reload_core = { workspace = true }
 code_reload_proc_macro = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+dircpy = { workspace = true }

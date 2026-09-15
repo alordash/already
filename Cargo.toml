@@ -23,3 +23,5 @@ not_enough_syntax = "0.1.5"
 libloading = "0.9.0"
 
 rsubstitute = "0.1.5"
+tempfile = "3.27.0"
+dircpy = "0.3.20"
