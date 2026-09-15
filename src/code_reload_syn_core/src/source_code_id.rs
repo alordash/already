@@ -1,5 +1,4 @@
-#[cfg(test)]
-use rsubstitute::*;
+use std::ops::Deref;
 use std::path::PathBuf;
 
 pub struct SourceCodeId {
@@ -23,8 +22,8 @@ impl SourceCodeId {
         let result = self
             .relative_file_path
             .iter()
-            .map(|x| x.to_str().unwrap())
-            .map(normalize_path_part)
+            .map(|x| x.to_string_lossy())
+            .map(|x| normalize_path_part(x.deref()))
             .chain(vec![self.line.to_string(), self.column.to_string()])
             .collect::<Vec<_>>()
             .join("_");
@@ -33,7 +32,6 @@ impl SourceCodeId {
     }
 }
 
-#[cfg_attr(test, mock(base))]
 fn normalize_path_part(path_part: &str) -> String {
     path_part.replace(|x| !char::is_alphanumeric(x), "_")
 }
@@ -50,22 +48,12 @@ mod tests {
         let line = 10;
         let column = 20;
         let source_code_id = SourceCodeId::new("a/b/c.rs".into(), line, column);
-        normalize_path_part::setup(Arg::Any).returns_many([
-            "quo".to_owned(),
-            "vadis".to_owned(),
-            "veridis".to_owned(),
-        ]);
 
         // Act
         let result = source_code_id.to_fn_ident_prefix();
 
         // Assert
-        let expected = format!("quo_vadis_veridis_{}_{}", line, column);
+        let expected = format!("a_b_c_rs_{}_{}", line, column);
         assert_eq!(result, expected);
-
-        normalize_path_part::received("a", 1.time())
-            .received("b", 1.time())
-            .received("c.rs", 1.time())
-            .no_other_calls();
     }
 }
