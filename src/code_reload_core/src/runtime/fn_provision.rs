@@ -39,11 +39,14 @@ fn spawn_library_watcher(
     })
     .unwrap();
 
+    let library_path = std::env::current_exe()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join(library_file_name);
+    dbg!(&library_path);
     watcher
-        .watch(
-            &PathBuf::from_str(library_file_name).expect("TODO: Unable to get library path"),
-            notify::RecursiveMode::NonRecursive,
-        )
+        .watch(&library_path, notify::RecursiveMode::NonRecursive)
         .unwrap();
 
     core::mem::forget(watcher);

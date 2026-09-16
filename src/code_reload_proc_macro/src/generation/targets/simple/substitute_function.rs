@@ -14,61 +14,7 @@ use pat_named_type::*;
 pub(crate) fn generate(item_fn: &ItemFn, new_fn_ident_string: String) -> ItemFn {
     let caller_library_file_name = caller_crate::library_file_name();
     let span = item_fn.span();
-    let library_ident = Ident::new("library", span);
-    let library_stmt = Stmt::Local(Local {
-        attrs: Vec::new(),
-        let_token: Token![let](span),
-        modifiers: LocalModifiers::default(),
-        pat: Pat::Ident(PatIdent {
-            attrs: Vec::new(),
-            by_ref: None,
-            mutability: None,
-            ident: library_ident.clone(),
-            subpat: None,
-        }),
-        init: Some(LocalInit {
-            eq_token: Token![=](span),
-            expr: Box::new(Expr::Call(expr::call::new(
-                span,
-                Expr::Path(expr::path::new(
-                    span,
-                    ["code_reload", "SimpleLibraryWrapper", "new"],
-                )),
-                [expr::lit::string(span, &caller_library_file_name)],
-            ))),
-            diverge: None,
-        }),
-        semi_token: Token![;](span),
-    });
     let named_fn_args = name_fn_args(&item_fn.sig.inputs);
-    let turbofish = AngleBracketedGenericArguments {
-        colon2_token: Some(Token![::](span)),
-        lt_token: Token![<](span),
-        args: punctuated([GenericArgument::Type(Type::FnPtr(TypeFnPtr {
-            attrs: Vec::new(),
-            lifetimes: None,
-            unsafety: None,
-            abi: None,
-            fn_token: Token![fn](span),
-            paren_token: token::Paren(span),
-            inputs: named_fn_args
-                .iter()
-                .map(|x| NamedArg {
-                    attrs: Vec::new(),
-                    name: None,
-                    ty: match x {
-                        NamedFnArg::Receiver(r) => {
-                            Type::Path(r#type::path::new(r.self_token.span, ["Self"]))
-                        }
-                        NamedFnArg::NamedTyped(nt) => *nt.ty.clone(),
-                    },
-                })
-                .collect(),
-            variadic: None,
-            output: item_fn.sig.output.clone(),
-        }))]),
-        gt_token: Token![>](span),
-    };
     let args = named_fn_args
         .iter()
         .map(|x| match x {
@@ -83,19 +29,45 @@ pub(crate) fn generate(item_fn: &ItemFn, new_fn_ident_string: String) -> ItemFn 
     let call_stmt = Stmt::Expr(
         Expr::Call(ExprCall {
             attrs: Vec::new(),
-            func: Box::new(Expr::MethodCall(ExprMethodCall {
-                attrs: Vec::new(),
-                receiver: Box::new(Expr::Path(ExprPath {
+            func: Box::new(Expr::Call(expr::call::new(
+                span,
+                Expr::Path(ExprPath {
                     attrs: Vec::new(),
                     qself: None,
-                    path: path::from_ident(library_ident),
-                })),
-                dot_token: Token![.](span),
-                method: Ident::new("get", span),
-                turbofish: Some(turbofish),
-                paren_token: token::Paren(span),
-                args: punctuated([expr::lit::byte_string(span, new_fn_ident_string.as_bytes())]),
-            })),
+                    path: path::new_generics_global(
+                        span,
+                        ["code_reload", "provide_fn"],
+                        [GenericArgument::Type(Type::FnPtr(TypeFnPtr {
+                            attrs: Vec::new(),
+                            lifetimes: None,
+                            unsafety: None,
+                            abi: None,
+                            fn_token: Token![fn](span),
+                            paren_token: token::Paren(span),
+                            inputs: named_fn_args
+                                .iter()
+                                .map(|x| NamedArg {
+                                    attrs: Vec::new(),
+                                    name: None,
+                                    ty: match x {
+                                        NamedFnArg::Receiver(r) => Type::Path(r#type::path::new(
+                                            r.self_token.span,
+                                            ["Self"],
+                                        )),
+                                        NamedFnArg::NamedTyped(nt) => *nt.ty.clone(),
+                                    },
+                                })
+                                .collect(),
+                            variadic: None,
+                            output: item_fn.sig.output.clone(),
+                        }))],
+                    ),
+                }),
+                [
+                    expr::lit::string(span, &caller_library_file_name),
+                    expr::lit::byte_string(span, new_fn_ident_string.as_bytes()),
+                ],
+            ))),
             paren_token: token::Paren(span),
             args,
         }),
@@ -103,7 +75,7 @@ pub(crate) fn generate(item_fn: &ItemFn, new_fn_ident_string: String) -> ItemFn 
     );
     let block = Block {
         brace_token: token::Brace(span),
-        stmts: vec![library_stmt, call_stmt],
+        stmts: vec![call_stmt],
     };
     let result = ItemFn {
         attrs: item_fn.attrs.clone(),

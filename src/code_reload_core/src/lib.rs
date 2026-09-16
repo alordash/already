@@ -1,7 +1,7 @@
 mod runtime;
 mod simple_library_wrapper;
 
-use crate::runtime::*;
+pub use crate::runtime::provide_fn;
 use arc_swap::ArcSwap;
 pub use simple_library_wrapper::*;
 use std::sync::Arc;

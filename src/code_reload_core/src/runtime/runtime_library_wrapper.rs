@@ -30,12 +30,12 @@ impl RuntimeLibraryWrapper {
     pub fn get<F>(&self, symbol_name: &'static [u8]) -> F {
         let raw_f = self.fn_ptrs_map.get_or_insert_with(symbol_name, || unsafe {
             self.inner
-                .get::<()>(symbol_name)
+                .get::<fn()>(symbol_name)
                 .unwrap()
                 .try_as_raw_ptr()
                 .unwrap()
         });
-        let f_ptr = &raw_f as *const _ as *const ();
+        let f_ptr = *raw_f as *const _ as *const ();
         let result = unsafe { core::mem::transmute_copy(&f_ptr) };
         return result;
     }
