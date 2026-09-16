@@ -13,7 +13,7 @@ pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]
             let shared_library_wrapper = Arc::new(ArcSwap::from_pointee(
                 RuntimeLibraryWrapper::new(library_file_name),
             ));
-            spawn_watcher(library_file_name, shared_library_wrapper.clone());
+            spawn_library_watcher(library_file_name, shared_library_wrapper.clone());
             return shared_library_wrapper;
         })
         .load_full();
@@ -22,7 +22,7 @@ pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]
     return result;
 }
 
-fn spawn_watcher(
+fn spawn_library_watcher(
     library_file_name: &'static str,
     shared_library_wrapper: Arc<ArcSwap<RuntimeLibraryWrapper>>,
 ) {
