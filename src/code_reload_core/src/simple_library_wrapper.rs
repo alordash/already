@@ -1,9 +1,9 @@
-pub struct LibraryWrapper {
+pub struct SimpleLibraryWrapper {
     library_file_name: &'static str,
     inner: libloading::Library,
 }
 
-impl LibraryWrapper {
+impl SimpleLibraryWrapper {
     pub fn new(library_file_name: &'static str) -> Self {
         let dynamic_library_dir = std::env::current_exe()
             .expect("Unable to get current executable path from `std::env::current_exe()`.")

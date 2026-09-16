@@ -32,7 +32,7 @@ pub(crate) fn generate(item_fn: &ItemFn, new_fn_ident_string: String) -> ItemFn 
                 span,
                 Expr::Path(expr::path::new(
                     span,
-                    ["code_reload", "LibraryWrapper", "new"],
+                    ["code_reload", "SimpleLibraryWrapper", "new"],
                 )),
                 [expr::lit::string(span, &caller_library_file_name)],
             ))),
