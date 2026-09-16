@@ -53,7 +53,7 @@ pub fn get() -> i32 { 2 }"#,
         .stdin
         .as_ref()
         .expect("Cargo run process must have stdin");
-    run_process_stdin.write(b"\n")?;
+    run_process_stdin.write_all(b"\n")?;
     run_process_stdin.flush()?;
     let run_process_output = run_process.wait_with_output()?;
     if !run_process_output.status.success() {
