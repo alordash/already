@@ -10,3 +10,7 @@ code_reload_proc_macro = { workspace = true }
 [dev-dependencies]
 tempfile = { workspace = true }
 dircpy = { workspace = true }
+
+[lints.clippy]
+needless_return = "allow"
+match_like_matches_macro = "allow"
