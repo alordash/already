@@ -71,15 +71,15 @@ mod test_project_process {
                 .expect("Test project process must have stdout");
             stdout.read_exact(&mut [0u8])
         }
-        
+
         pub fn send_enter_to_stdin(&mut self) -> std::io::Result<()> {
-            let stdin =
-                self.child
-                    .stdin
-                    .as_mut()
-                    .expect("Test project process must have stdin");
-                    stdin.write_all(b"\n")?;
-                    stdin.flush()
+            let stdin = self
+                .child
+                .stdin
+                .as_mut()
+                .expect("Test project process must have stdin");
+            stdin.write_all(b"\n")?;
+            stdin.flush()
         }
 
         pub fn wait_for_successful_exit(self) -> std::io::Result<()> {

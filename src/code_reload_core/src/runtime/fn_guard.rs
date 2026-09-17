@@ -1,14 +1,13 @@
 use super::*;
 use std::ops::Deref;
 use std::sync::Arc;
-use arc_swap::Guard;
 
-pub struct FnReadLock<F> {
+pub struct FnGuard<F> {
     f: F,
     _library_arc: Arc<RuntimeLibraryWrapper>,
 }
 
-impl<F> FnReadLock<F> {
+impl<F> FnGuard<F> {
     pub fn new(f: F, library_arc: Arc<RuntimeLibraryWrapper>) -> Self {
         Self {
             f,
@@ -17,10 +16,20 @@ impl<F> FnReadLock<F> {
     }
 }
 
-impl<F> Deref for FnReadLock<F> {
+impl<F> Deref for FnGuard<F> {
     type Target = F;
 
     fn deref(&self) -> &Self::Target {
         &self.f
+    }
+}
+
+impl<F> Drop for FnGuard<F> {
+    fn drop(&mut self) {
+        // TODO - remove, it's only for debug
+        println!(
+            "Freed fn, library references count: {}",
+            Arc::strong_count(&self._library_arc)
+        );
     }
 }

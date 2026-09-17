@@ -1,3 +1,5 @@
+// TODO - more test cases: where lib and bin are in same crate, where lib and bin are separate crate
+
 #![allow(non_snake_case)]
 
 mod build_utils;
