@@ -1,0 +1,173 @@
+mod named_fn_arg;
+mod pat_named_type;
+
+use crate::SourceCodeId;
+use crate::caller_crate;
+use named_fn_arg::*;
+use not_enough_syntax::*;
+use pat_named_type::*;
+use quote::{ToTokens, format_ident};
+use syn::punctuated::Punctuated;
+use syn::spanned::Spanned;
+use syn::*;
+
+pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut Block) {
+    let call_site = proc_macro::Span::call_site();
+    let relative_file_path = call_site.local_file().unwrap_or_else(|| "UNKNOWN".into());
+    let source_code_id =
+        SourceCodeId::new(relative_file_path, call_site.line(), call_site.column());
+    let fn_ident_prefix = source_code_id.to_fn_ident_prefix();
+    let export_fn_ident_string =
+        format_ident!("__code_reload_{}_{}", fn_ident_prefix, signature.ident).to_string();
+
+    let unsafe_export_name_attribute = {
+        let span = signature.span();
+        Attribute {
+            pound_token: Token![#](span),
+            style: AttrStyle::Outer,
+            bracket_token: token::Bracket(span),
+            meta: Meta::List(MetaList {
+                path: path::new(span, ["unsafe"]),
+                delimiter: MacroDelimiter::Paren(token::Paren(span)),
+                tokens: MetaNameValue {
+                    path: path::new(span, ["export_name"]),
+                    eq_token: Token![=](span),
+                    value: expr::lit::string(span, &export_fn_ident_string),
+                }
+                .to_token_stream(),
+            }),
+        }
+    };
+    attributes.push(unsafe_export_name_attribute);
+    let return_stmt = {
+        let span = block.span();
+        let caller_library_file_name = caller_crate::library_file_name();
+        let named_fn_args = name_fn_args(&signature.inputs);
+        let args = named_fn_args
+            .iter()
+            .map(|x| match x {
+                NamedFnArg::Receiver(r) => Expr::Path(expr::path::new(r.self_token.span, ["self"])),
+                NamedFnArg::NamedTyped(nt) => Expr::Path(ExprPath {
+                    attrs: Vec::new(),
+                    qself: None,
+                    path: path::from_ident(nt.pat_ident.ident.clone()),
+                }),
+            })
+            .collect();
+        let call_expr = Expr::Call(ExprCall {
+            attrs: Vec::new(),
+            func: Box::new(Expr::Call(expr::call::new(
+                span,
+                Expr::Path(ExprPath {
+                    attrs: Vec::new(),
+                    qself: None,
+                    path: path::new_generics_global(
+                        span,
+                        ["code_reload", "provide_fn"],
+                        [GenericArgument::Type(Type::FnPtr(TypeFnPtr {
+                            attrs: Vec::new(),
+                            lifetimes: None,
+                            unsafety: None,
+                            abi: None,
+                            fn_token: Token![fn](span),
+                            paren_token: token::Paren(span),
+                            inputs: named_fn_args
+                                .iter()
+                                .map(|x| NamedArg {
+                                    attrs: Vec::new(),
+                                    name: None,
+                                    ty: match x {
+                                        NamedFnArg::Receiver(r) => Type::Path(r#type::path::new(
+                                            r.self_token.span,
+                                            ["Self"],
+                                        )),
+                                        NamedFnArg::NamedTyped(nt) => *nt.ty.clone(),
+                                    },
+                                })
+                                .collect(),
+                            variadic: None,
+                            output: signature.output.clone(),
+                        }))],
+                    ),
+                }),
+                [
+                    expr::lit::string(span, &caller_library_file_name),
+                    expr::lit::byte_string(span, export_fn_ident_string.as_bytes()),
+                ],
+            ))),
+            paren_token: token::Paren(span),
+            args,
+        });
+        Stmt::Expr(
+            Expr::Return(ExprReturn {
+                attrs: Vec::new(),
+                return_token: Token![return](span),
+                expr: Some(Box::new(call_expr)),
+            }),
+            Some(Token![;](span)),
+        )
+    };
+    let is_outside_dynamic_library_expr = {
+        let span = block.span();
+        Expr::Call(expr::call::new(
+            span,
+            Expr::Path(expr::path::new_global(
+                span,
+                ["code_reload", "is_outside_dynamic_library"],
+            )),
+            [Expr::Cast(ExprCast {
+                attrs: Vec::new(),
+                expr: Box::new(Expr::Path(ExprPath {
+                    attrs: Vec::new(),
+                    qself: None,
+                    path: path::from_ident(signature.ident.clone()),
+                })),
+                as_token: Token![as](span),
+                ty: Box::new(const_ptr_void_type(span)),
+            })],
+        ))
+    };
+    let if_stmt = {
+        let span = block.span();
+        Stmt::Expr(
+            Expr::If(ExprIf {
+                attrs: Vec::new(),
+                if_token: Token![if](span),
+                cond: Box::new(is_outside_dynamic_library_expr),
+                then_branch: Block {
+                    brace_token: token::Brace(span),
+                    stmts: vec![return_stmt],
+                },
+                else_branch: None,
+            }),
+            None,
+        )
+    };
+    block.stmts.insert(0, if_stmt);
+}
+
+fn name_fn_args<P>(fn_args: &Punctuated<FnArg, P>) -> Vec<NamedFnArg> {
+    let result = fn_args
+        .iter()
+        .enumerate()
+        .map(|(i, x)| match x {
+            FnArg::Receiver(r) => NamedFnArg::Receiver(r.clone()),
+            FnArg::Typed(t) => NamedFnArg::NamedTyped(PatNamedType {
+                attrs: t.attrs.clone(),
+                pat_ident: match t.pat.as_ref() {
+                    Pat::Ident(pat_ident) => pat_ident.clone(),
+                    _ => PatIdent {
+                        attrs: Vec::new(),
+                        by_ref: None,
+                        mutability: None,
+                        ident: format_ident!("__arg_{i}"),
+                        subpat: None,
+                    },
+                },
+                colon_token: t.colon_token,
+                ty: t.ty.clone(),
+            }),
+        })
+        .collect();
+    return result;
+}

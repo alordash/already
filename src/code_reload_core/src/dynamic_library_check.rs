@@ -14,9 +14,9 @@ unsafe extern "system" {
 const GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS: u32 = 0x00000004;
 const GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT: u32 = 0x00000002;
 
-pub fn is_inside_dynamic_library(current_ptr: *const ()) -> bool {
+pub fn is_outside_dynamic_library(current_ptr: *const ()) -> bool {
     static IS_DLL: OnceLock<bool> = OnceLock::new();
-    *IS_DLL.get_or_init(|| slow_is_inside_dynamic_library(current_ptr))
+    *IS_DLL.get_or_init(|| !slow_is_inside_dynamic_library(current_ptr))
 }
 
 fn slow_is_inside_dynamic_library(current_ptr: *const ()) -> bool {
