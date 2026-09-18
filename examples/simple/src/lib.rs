@@ -41,7 +41,7 @@ pub trait Trait {
 
     #[unsafe(export_name = "__code_reload_UNKNOWN_1_1_statat")]
     fn statat(v: i32) -> i32 {
-        v + 1`
+        v + 1
     }
 }
 

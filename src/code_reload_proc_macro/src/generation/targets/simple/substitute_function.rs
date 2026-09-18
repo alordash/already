@@ -1,4 +1,3 @@
-use code_reload_syn_core::*;
 use not_enough_syntax::*;
 use quote::format_ident;
 use syn::punctuated::Punctuated;
@@ -10,6 +9,7 @@ mod pat_named_type;
 
 use named_fn_arg::*;
 use pat_named_type::*;
+use crate::caller_crate;
 
 pub(crate) fn generate(item_fn: &ItemFn, new_fn_ident_string: String) -> ItemFn {
     let caller_library_file_name = caller_crate::library_file_name();

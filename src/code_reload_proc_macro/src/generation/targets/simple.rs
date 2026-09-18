@@ -1,6 +1,6 @@
-use code_reload_syn_core::*;
 use quote::format_ident;
 use syn::*;
+use crate::SourceCodeId;
 
 mod source_function;
 mod substitute_function;

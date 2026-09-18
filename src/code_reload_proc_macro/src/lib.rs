@@ -1,9 +1,13 @@
 use crate::generation::targets::*;
-use code_reload_syn_core::*;
 use quote::{ToTokens, quote};
 use syn::*;
 
+mod build_profile;
+mod caller_crate;
 mod generation;
+mod source_code_id;
+
+use source_code_id::*;
 
 #[proc_macro_attribute]
 pub fn hotreload(
