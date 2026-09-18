@@ -28,8 +28,9 @@ impl<F> Drop for FnGuard<F> {
     fn drop(&mut self) {
         // TODO - remove, it's only for debug
         println!(
-            "Freed fn, library references count: {}",
-            Arc::strong_count(&self._library_arc)
+            "Freed fn, library references count: {}, library ptr: {:?}",
+            Arc::strong_count(&self._library_arc),
+            Arc::as_ptr(&self._library_arc)
         );
     }
 }

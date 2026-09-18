@@ -1,4 +1,5 @@
-use code_reload::{hotreload, is_inside_dynamic_library};
+use code_reload::is_inside_dynamic_library;
+use std::time::Duration;
 
 // #[hotreload]
 // pub fn foo(v: i32) -> i32 {
@@ -13,5 +14,9 @@ pub fn foo(v: i32) -> i32 {
             b"__code_reload_UNKNOWN_1_1_foo",
         )(v);
     }
-    v + v
+    println!("\tStart...");
+    std::thread::sleep(Duration::from_secs(5));
+    println!("\t...done");
+    std::thread::sleep(Duration::from_millis(100));
+    v + v + 100
 }

@@ -1,8 +1,6 @@
 use super::*;
-use arc_swap::ArcSwap;
 use std::path::PathBuf;
-use std::ptr::NonNull;
-use std::sync::{Arc, LazyLock, Mutex};
+use std::sync::{Arc, LazyLock};
 use std::time::Instant;
 
 pub struct RuntimeLibraryWrapper {
@@ -78,19 +76,22 @@ impl RuntimeLibraryWrapper {
 
 impl Drop for RuntimeLibraryWrapper {
     fn drop(&mut self) {
-        if let Some(inner) = self.maybe_inner.take() {
-            if let Err(e) = inner.close() {
-                println!(
-                    "[WARNING] Unable to close dynamic library '{:?}': {:?}",
-                    self.library_copy_path, e
-                );
-            }
+        if let Some(inner) = self.maybe_inner.take()
+            && let Err(e) = inner.close()
+        {
+            println!(
+                "[WARNING] Unable to close dynamic library '{:?}': {:?}",
+                self.library_copy_path, e
+            );
         }
+
         if let Err(e) = std::fs::remove_file(&self.library_copy_path) {
             println!(
                 "[WARNING] Unable to clear copy of dynamic library '{:?}': {:?}",
                 self.library_copy_path, e
             );
         }
+
+        println!("Dropping LIBRARY '{:?}'", self.library_copy_path);
     }
 }

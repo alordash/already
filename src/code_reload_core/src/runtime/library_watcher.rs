@@ -14,9 +14,10 @@ pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<RuntimeL
             }) => {}
             _ => return,
         }
-        println!("UPDATE EVENT FOR LIBRARY '{static_library_path:?}', event: {event:?}");
+        println!("Updating library '{static_library_path:?}'");
         let new_library = RuntimeLibraryWrapper::new(static_library_path.to_owned());
         shared_library_wrapper.store(Arc::new(new_library));
+        println!("Updated library '{static_library_path:?}'");
     })
     .unwrap();
 
