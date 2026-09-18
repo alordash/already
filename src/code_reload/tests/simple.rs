@@ -5,8 +5,6 @@
 mod build_utils;
 use build_utils::*;
 
-const CARGO_MANIFEST_DIR_VAR_NAME: &str = "CARGO_MANIFEST_DIR";
-
 #[test]
 fn SimpleHotreload_Works() -> std::io::Result<()> {
     // Arrange

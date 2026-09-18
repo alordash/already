@@ -1,7 +1,8 @@
-use crate::CARGO_MANIFEST_DIR_VAR_NAME;
 use std::path::PathBuf;
 use tempfile::{TempDir, tempdir};
 use test_project_process::*;
+
+const CARGO_MANIFEST_DIR_VAR_NAME: &str = "CARGO_MANIFEST_DIR";
 
 pub fn copy_test_project(test_project_name: &'static str) -> std::io::Result<TempDir> {
     let code_reload_dir = PathBuf::from(std::env::var(CARGO_MANIFEST_DIR_VAR_NAME).unwrap_or_else(|e| {
