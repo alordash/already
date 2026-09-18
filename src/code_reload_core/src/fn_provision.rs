@@ -1,9 +1,8 @@
 use super::*;
 use arc_swap::ArcSwap;
-use notify::Watcher;
 use std::sync::{Arc, OnceLock};
 
-static DYNAMIC_LIBRARY: OnceLock<Arc<ArcSwap<RuntimeLibraryWrapper>>> = OnceLock::new();
+static DYNAMIC_LIBRARY: OnceLock<Arc<ArcSwap<LibraryWrapper>>> = OnceLock::new();
 
 pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]) -> FnGuard<F> {
     let library = DYNAMIC_LIBRARY
@@ -16,7 +15,7 @@ pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]
                 .join(library_file_name);
 
             let shared_library_wrapper = Arc::new(ArcSwap::from_pointee(
-                RuntimeLibraryWrapper::new(library_source_path.clone()),
+                LibraryWrapper::new(library_source_path.clone()),
             ));
 
             library_watcher::spawn(library_source_path, shared_library_wrapper.clone());

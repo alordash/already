@@ -20,7 +20,7 @@ Steps to use this library:
 
 ```toml
 [dependencies]
-code_reload = *
+code_reload = "*"
 ```
 
 2. Add `crate-type = ["cdylib", "lib"]` to `lib` section in `Cargo.toml` (your crate must produce dynamic library):

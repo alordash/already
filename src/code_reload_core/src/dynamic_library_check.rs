@@ -1,4 +1,7 @@
 // TODO - unsloppify, support linux
+#![allow(unused)]
+#![allow(clippy::upper_case_acronyms)]
+#![allow(non_snake_case)]
 use std::ptr;
 use std::sync::OnceLock;
 
@@ -20,7 +23,6 @@ pub fn is_outside_dynamic_library(current_ptr: *const ()) -> bool {
 }
 
 fn slow_is_inside_dynamic_library(current_ptr: *const ()) -> bool {
-    println!("Performing slow inside dynamic library check");
     let mut h_module: HMODULE = ptr::null_mut();
     let flags =
         GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;

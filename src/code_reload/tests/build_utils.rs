@@ -9,10 +9,10 @@ pub fn copy_test_project(test_project_name: &'static str) -> std::io::Result<Tem
             "Unable to read project root path from env var '{CARGO_MANIFEST_DIR_VAR_NAME}': {e:?}"
         )
     }));
-    let source_simple_dir = code_reload_dir.join("tests").join("simple");
+    let source_dir = code_reload_dir.join("tests").join(test_project_name);
     let target_dir = tempdir()?;
 
-    dircpy::copy_dir(source_simple_dir, &target_dir)?;
+    dircpy::copy_dir(source_dir, &target_dir)?;
 
     let target_toml = target_dir.path().join("Cargo.toml");
     let target_toml_content = std::fs::read_to_string(&target_toml)?;

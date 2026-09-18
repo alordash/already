@@ -4,7 +4,7 @@ fn main() -> Result<(), std::io::Error> {
     let before_hotreload = get();
     assert_eq!(before_hotreload, 1);
 
-    print!("\n");
+    println!();
     let _sync = std::io::stdin().read_line(&mut String::new())?;
 
     let after_hotreload = get();

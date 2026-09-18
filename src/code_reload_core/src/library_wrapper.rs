@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, LazyLock};
 use std::time::Instant;
 
-pub struct RuntimeLibraryWrapper {
+pub struct LibraryWrapper {
     library_copy_path: PathBuf,
     fn_ptrs_map: GrowHashMap<&'static [u8], *mut core::ffi::c_void>,
     maybe_inner: Option<libloading::Library>,
@@ -11,7 +11,7 @@ pub struct RuntimeLibraryWrapper {
 
 static TIME_START: LazyLock<Instant> = LazyLock::new(Instant::now);
 
-impl RuntimeLibraryWrapper {
+impl LibraryWrapper {
     pub fn new(library_source_path: PathBuf) -> Self {
         let tick_stamp = TIME_START.elapsed().as_millis();
         let library_copy_path = {
@@ -44,7 +44,7 @@ impl RuntimeLibraryWrapper {
         return result;
     }
 
-    pub fn get<'a, F>(self: Arc<Self>, symbol_name: &'static [u8]) -> FnGuard<F> {
+    pub fn get<F>(self: Arc<Self>, symbol_name: &'static [u8]) -> FnGuard<F> {
         let raw_fn_ptr = self.fn_ptrs_map.get_or_insert_with(symbol_name, || unsafe {
             let raw_fn_ptr = self
                 .maybe_inner
@@ -74,7 +74,7 @@ impl RuntimeLibraryWrapper {
     }
 }
 
-impl Drop for RuntimeLibraryWrapper {
+impl Drop for LibraryWrapper {
     fn drop(&mut self) {
         if let Some(inner) = self.maybe_inner.take()
             && let Err(e) = inner.close()
@@ -91,7 +91,5 @@ impl Drop for RuntimeLibraryWrapper {
                 self.library_copy_path, e
             );
         }
-
-        println!("Dropping LIBRARY '{:?}'", self.library_copy_path);
     }
 }

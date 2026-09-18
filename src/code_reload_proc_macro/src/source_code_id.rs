@@ -18,7 +18,7 @@ impl SourceCodeId {
 }
 
 impl SourceCodeId {
-    pub fn to_fn_ident_prefix(self) -> String {
+    pub fn into_fn_ident_prefix(self) -> String {
         let result = self
             .relative_file_path
             .iter()
@@ -50,7 +50,7 @@ mod tests {
         let source_code_id = SourceCodeId::new("a/b/c.rs".into(), line, column);
 
         // Act
-        let result = source_code_id.to_fn_ident_prefix();
+        let result = source_code_id.into_fn_ident_prefix();
 
         // Assert
         let expected = format!("a_b_c_rs_{}_{}", line, column);

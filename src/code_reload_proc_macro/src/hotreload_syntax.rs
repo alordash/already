@@ -16,7 +16,7 @@ pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut
     let relative_file_path = call_site.local_file().unwrap_or_else(|| "UNKNOWN".into());
     let source_code_id =
         SourceCodeId::new(relative_file_path, call_site.line(), call_site.column());
-    let fn_ident_prefix = source_code_id.to_fn_ident_prefix();
+    let fn_ident_prefix = source_code_id.into_fn_ident_prefix();
     let export_fn_ident_string =
         format_ident!("__code_reload_{}_{}", fn_ident_prefix, signature.ident).to_string();
 
@@ -153,7 +153,6 @@ fn name_fn_args<P>(fn_args: &Punctuated<FnArg, P>) -> Vec<NamedFnArg> {
         .map(|(i, x)| match x {
             FnArg::Receiver(r) => NamedFnArg::Receiver(r.clone()),
             FnArg::Typed(t) => NamedFnArg::NamedTyped(PatNamedType {
-                attrs: t.attrs.clone(),
                 pat_ident: match t.pat.as_ref() {
                     Pat::Ident(pat_ident) => pat_ident.clone(),
                     _ => PatIdent {
@@ -164,7 +163,6 @@ fn name_fn_args<P>(fn_args: &Punctuated<FnArg, P>) -> Vec<NamedFnArg> {
                         subpat: None,
                     },
                 },
-                colon_token: t.colon_token,
                 ty: t.ty.clone(),
             }),
         })

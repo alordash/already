@@ -25,7 +25,6 @@ pub fn hotreload(
             &impl_item_fn.sig,
             &mut impl_item_fn.block,
         ),
-        _ => panic!("Can apply `#[hotreload]` only to standalone and associated functions."),
     };
 
     return any_fn.to_token_stream().into();
