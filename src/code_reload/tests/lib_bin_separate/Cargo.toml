@@ -1,5 +1,6 @@
 # TODO - write in docs that for separate lib to work you need to specify CARGO_TARGET_DIR env var so that
 # generated dynamic library file will be placed near bin
+# TODO - add manual set for CARGO_TARGET_DIR before building this test's artifacts
 
 [workspace]
 resolver = "3"
