@@ -19,8 +19,12 @@ impl Struct {
         40
     }
     #[code_reload::hotreload_assoc]
-    pub fn static_get() -> i32 {
+    pub fn box_get(self: Box<Self>) -> i32 {
         50
+    }
+    #[code_reload::hotreload_assoc]
+    pub fn static_get() -> i32 {
+        60
     }
 }
 
@@ -28,24 +32,29 @@ pub trait Trait {
     fn trait_get(&self) -> i32;
     fn trait_mut_get(&mut self) -> i32;
     fn trait_consume_get(self) -> i32;
+    fn trait_box_get(self: Box<Self>) -> i32;
     fn trait_static_get() -> i32;
 }
 
 impl Trait for Struct {
     #[code_reload::hotreload_assoc]
     fn trait_get(&self) -> i32 {
-        60
-    }
-    #[code_reload::hotreload_assoc]
-    fn trait_mut_get(&mut self) -> i32 {
         70
     }
     #[code_reload::hotreload_assoc]
-    fn trait_consume_get(self) -> i32 {
+    fn trait_mut_get(&mut self) -> i32 {
         80
     }
     #[code_reload::hotreload_assoc]
-    fn trait_static_get() -> i32 {
+    fn trait_consume_get(self) -> i32 {
         90
+    }
+    #[code_reload::hotreload_assoc]
+    fn trait_box_get(self: Box<Self>) -> i32 {
+        100
+    }
+    #[code_reload::hotreload_assoc]
+    fn trait_static_get() -> i32 {
+        110
     }
 }
