@@ -1,0 +1,22 @@
+[package]
+name = "benchmarks"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+code_reload = { workspace = true }
+
+[dev-dependencies]
+criterion = "0.7.0"
+walkdir = "2.5.0"
+
+[[bench]]
+name = "fibonacci"
+harness = false
+
+[lints.clippy]
+needless_return = "allow"
+match_like_matches_macro = "allow"

@@ -5,7 +5,7 @@ members = [
     "src/code_reload_core",
     "src/code_reload_proc_macro",
     "examples/lib_bin_together"
-]
+    , "benchmarks"]
 
 [workspace.dependencies]
 # TODO - is there a way to specify this versions only in one place? or this is meaningless?

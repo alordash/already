@@ -19,7 +19,6 @@ pub fn provide_library_wrapper(library_file_name: &str) -> Arc<LibraryWrapper> {
                 .unwrap_or_else(|e| panic!("Unable to get current exe path: {e:?}"))
                 .parent()
                 .unwrap_or_else(|| panic!("Unable to get current exe parent path: parent is empty"))
-                .to_owned()
                 .join(library_file_name);
 
             let shared_library_wrapper = Arc::new(ArcSwap::from_pointee(LibraryWrapper::new(

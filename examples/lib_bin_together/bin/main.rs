@@ -6,5 +6,4 @@ fn main() {
         dbg!(result);
         std::thread::sleep(core::time::Duration::from_millis(1700));
     }
-    println!("well hello there");
 }
