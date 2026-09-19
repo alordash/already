@@ -15,14 +15,12 @@ pub struct Parameters<'a> {
     pub attributes: &'a mut Vec<Attribute>,
     pub signature: &'a Signature,
     pub block: &'a mut Block,
-    pub is_associated: bool,
 }
 pub fn apply(
     Parameters {
         attributes,
         signature,
         block,
-        is_associated,
     }: Parameters,
 ) {
     let call_site = proc_macro::Span::call_site();
@@ -138,43 +136,13 @@ pub fn apply(
     };
     let is_outside_dynamic_library_expr = {
         let span = block.span();
-        let fn_path_expr = if is_associated {
-            Expr::Path(ExprPath {
-                attrs: Vec::new(),
-                qself: None,
-                path: Path {
-                    leading_colon: None,
-                    segments: punctuated([
-                        PathSegment {
-                            ident: Ident::new("Self", span),
-                            arguments: PathArguments::None,
-                        },
-                        PathSegment {
-                            ident: signature.ident.clone(),
-                            arguments: PathArguments::None,
-                        },
-                    ]),
-                },
-            })
-        } else {
-            Expr::Path(ExprPath {
-                attrs: Vec::new(),
-                qself: None,
-                path: path::from_ident(signature.ident.clone()),
-            })
-        };
         Expr::Call(expr::call::new(
             span,
             Expr::Path(expr::path::new_global(
                 span,
                 ["code_reload", "is_outside_dynamic_library"],
             )),
-            [Expr::Cast(ExprCast {
-                attrs: Vec::new(),
-                expr: Box::new(fn_path_expr),
-                as_token: Token![as](span),
-                ty: Box::new(const_ptr_void_type(span)),
-            })],
+            [],
         ))
     };
     let if_stmt = {

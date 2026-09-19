@@ -17,18 +17,22 @@ unsafe extern "system" {
 const GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS: u32 = 0x00000004;
 const GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT: u32 = 0x00000002;
 
-pub fn is_outside_dynamic_library(current_ptr: *const ()) -> bool {
+pub fn is_outside_dynamic_library() -> bool {
     static IS_DLL: OnceLock<bool> = OnceLock::new();
-    *IS_DLL.get_or_init(|| !slow_is_inside_dynamic_library(current_ptr))
+    *IS_DLL.get_or_init(|| !slow_is_inside_dynamic_library())
 }
 
-fn slow_is_inside_dynamic_library(current_ptr: *const ()) -> bool {
+fn slow_is_inside_dynamic_library() -> bool {
     let mut h_module: HMODULE = ptr::null_mut();
     let flags =
         GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
 
     unsafe {
-        if GetModuleHandleExW(flags, current_ptr as *const u16, &mut h_module) != 0
+        if GetModuleHandleExW(
+            flags,
+            slow_is_inside_dynamic_library as *const u16,
+            &mut h_module,
+        ) != 0
             && !h_module.is_null()
         {
             let mut buffer = [0u16; 32768];
