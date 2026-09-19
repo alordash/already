@@ -1,3 +1,5 @@
+# TODO - check that lib and bin together work even without CARGO_TARGET_DIR env var
+
 [package]
 name = "lib_bin_together"
 version = "0.1.0"

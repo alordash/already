@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tempfile::{TempDir, tempdir};
 use test_project_process::*;
 
@@ -27,7 +27,7 @@ pub fn copy_test_project(test_project_name: &'static str) -> std::io::Result<Tem
 }
 
 pub fn cargo_clean_rebuild_in(
-    target_dir: &TempDir,
+    target_dir: &Path,
     test_project_name: &'static str,
 ) -> std::io::Result<()> {
     std::process::Command::new("cargo")
@@ -41,7 +41,7 @@ pub fn cargo_clean_rebuild_in(
     Ok(())
 }
 
-pub fn cargo_run_in(target_dir: &TempDir) -> std::io::Result<TestProjectProcess> {
+pub fn cargo_run_in(target_dir: &Path) -> std::io::Result<TestProjectProcess> {
     let run_process = std::process::Command::new("cargo")
         .args(["run", "--bin", "main"])
         .stdin(std::process::Stdio::piped())
