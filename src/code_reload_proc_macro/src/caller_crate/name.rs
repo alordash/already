@@ -11,16 +11,7 @@ static NAME: LazyLock<String> = LazyLock::new(|| {
     return result;
 });
 
-#[allow(unreachable_code)]
 pub fn library_file_name() -> String {
     let name = NAME.deref();
-    #[cfg(target_os = "windows")]
-    {
-        return format!("{name}.dll");
-    }
-    #[cfg(target_os = "linux")]
-    {
-        return format!("lib{name}.so");
-    }
-    panic!("OS '{}' is not supported.", std::env::consts::OS);
+    return code_reload_core::get_platform_library_file_name(name);
 }

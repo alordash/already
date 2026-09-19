@@ -1,27 +1,22 @@
 // TODO - more test cases: where lib and bin are in same crate, where lib and bin are separate crate
 
-#![allow(non_snake_case)]
-
 mod build_utils;
 use build_utils::*;
 
 #[test]
-fn SimpleHotreload_Works() -> std::io::Result<()> {
+fn hotreload_works() -> std::io::Result<()> {
     // Arrange
-    let target_dir = copy_test_project("simple")?;
+    const PACKAGE_NAME: &str = "lib_bin_together";
+    let target_dir = copy_test_project(PACKAGE_NAME)?;
     let target_lib = target_dir.as_ref().join("src").join("lib.rs");
-    cargo_clean_rebuild_in(&target_dir, "simple")?;
+    let updated_lib = target_dir.as_ref().join("src").join("lib_updated.rs");
+    cargo_clean_rebuild_in(&target_dir, PACKAGE_NAME)?;
 
     // Act
     let mut test_run_process = cargo_run_in(&target_dir)?;
     test_run_process.wait_for_input_from_stdout()?;
-    std::fs::write(
-        target_lib,
-        r#"#[code_reload::hotreload]
-#[allow(unused)]
-pub fn get() -> i32 { 2 }"#,
-    )?;
-    cargo_clean_rebuild_in(&target_dir, "simple")?;
+    std::fs::copy(updated_lib, target_lib)?;
+    cargo_clean_rebuild_in(&target_dir, PACKAGE_NAME)?;
     test_run_process.send_enter_to_stdin()?;
 
     // Assert

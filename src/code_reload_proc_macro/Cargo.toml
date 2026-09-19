@@ -11,6 +11,7 @@ proc-macro2 = { workspace = true }
 quote = { workspace = true }
 syn = { workspace = true }
 not_enough_syntax = { workspace = true }
+code_reload_core = { workspace = true }
 
 [lints.clippy]
 needless_return = "allow"
