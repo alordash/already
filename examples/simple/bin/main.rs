@@ -1,4 +1,4 @@
-use lib_bin_together::foo;
+use simple::foo;
 
 fn main() {
     loop {

@@ -41,9 +41,9 @@ pub fn cargo_clean_rebuild_in(
     Ok(())
 }
 
-pub fn cargo_run_in(target_dir: &Path) -> std::io::Result<TestProjectProcess> {
+pub fn cargo_run_in(target_dir: &Path, bin_name: &str) -> std::io::Result<TestProjectProcess> {
     let run_process = std::process::Command::new("cargo")
-        .args(["run", "--bin", "main"])
+        .args(["run", "--bin", bin_name])
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .current_dir(target_dir)

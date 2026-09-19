@@ -14,5 +14,5 @@ code_reload = { path = "../.." }
 [workspace]
 
 [[bin]]
-name = "main"
-path = "bin/main.rs"
+name = "bin_together"
+path = "bin/bin_together.rs"

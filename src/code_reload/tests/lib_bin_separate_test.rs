@@ -17,7 +17,7 @@ fn hotreload_works() -> std::io::Result<()> {
 
     // Act
     println!("running in");
-    let mut test_run_process = cargo_run_in(&bin_dir)?;
+    let mut test_run_process = cargo_run_in(&bin_dir, "bin_separate")?;
     test_run_process.wait_for_input_from_stdout()?;
     std::fs::copy(updated_lib, target_lib)?;
     cargo_clean_rebuild_in(&lib_dir, LIB_PACKAGE_NAME)?;

@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "main"
-path = "src/main.rs"
+name = "bin_separate"
+path = "src/bin_separate.rs"
 
 [dependencies]
 code_reload = { workspace = true }

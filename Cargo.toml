@@ -4,7 +4,7 @@ members = [
     "src/code_reload",
     "src/code_reload_core",
     "src/code_reload_proc_macro",
-    "examples/lib_bin_together",
+    "examples/simple",
     "benchmarks"
 ]
 
