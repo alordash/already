@@ -11,7 +11,20 @@ use syn::punctuated::Punctuated;
 use syn::spanned::Spanned;
 use syn::*;
 
-pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut Block) {
+pub struct Parameters<'a> {
+    pub attributes: &'a mut Vec<Attribute>,
+    pub signature: &'a Signature,
+    pub block: &'a mut Block,
+    pub is_associated: bool,
+}
+pub fn apply(
+    Parameters {
+        attributes,
+        signature,
+        block,
+        is_associated,
+    }: Parameters,
+) {
     let call_site = proc_macro::Span::call_site();
     let relative_file_path = call_site.local_file().unwrap_or_else(|| "UNKNOWN".into());
     let source_code_id =
@@ -77,10 +90,26 @@ pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut
                                     attrs: Vec::new(),
                                     name: None,
                                     ty: match x {
-                                        NamedFnArg::Receiver(r) => Type::Path(r#type::path::new(
-                                            r.self_token.span,
-                                            ["Self"],
-                                        )),
+                                        NamedFnArg::Receiver(r) => match &r.kind {
+                                            ReceiverKind::Value => Type::Path(r#type::path::new(
+                                                r.self_token.span,
+                                                ["Self"],
+                                            )),
+                                            ReceiverKind::Reference(and_token, _, mutability) => {
+                                                Type::Reference(TypeReference {
+                                                    attrs: Vec::new(),
+                                                    and_token: *and_token,
+                                                    lifetime: None,
+                                                    mutability: *mutability,
+                                                    elem: Box::new(Type::Path(r#type::path::new(
+                                                        r.self_token.span,
+                                                        ["Self"],
+                                                    )))
+                                                })
+                                            }
+                                            ReceiverKind::Typed(_, ty) => *ty.clone(),
+                                            _ => panic!("Receiver type must be either value, reference or typed.")
+                                        },
                                         NamedFnArg::NamedTyped(nt) => *nt.ty.clone(),
                                     },
                                 })
@@ -109,6 +138,31 @@ pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut
     };
     let is_outside_dynamic_library_expr = {
         let span = block.span();
+        let fn_path_expr = if is_associated {
+            Expr::Path(ExprPath {
+                attrs: Vec::new(),
+                qself: None,
+                path: Path {
+                    leading_colon: None,
+                    segments: punctuated([
+                        PathSegment {
+                            ident: Ident::new("Self", span),
+                            arguments: PathArguments::None,
+                        },
+                        PathSegment {
+                            ident: signature.ident.clone(),
+                            arguments: PathArguments::None,
+                        },
+                    ]),
+                },
+            })
+        } else {
+            Expr::Path(ExprPath {
+                attrs: Vec::new(),
+                qself: None,
+                path: path::from_ident(signature.ident.clone()),
+            })
+        };
         Expr::Call(expr::call::new(
             span,
             Expr::Path(expr::path::new_global(
@@ -117,11 +171,7 @@ pub fn apply(attributes: &mut Vec<Attribute>, signature: &Signature, block: &mut
             )),
             [Expr::Cast(ExprCast {
                 attrs: Vec::new(),
-                expr: Box::new(Expr::Path(ExprPath {
-                    attrs: Vec::new(),
-                    qself: None,
-                    path: path::from_ident(signature.ident.clone()),
-                })),
+                expr: Box::new(fn_path_expr),
                 as_token: Token![as](span),
                 ty: Box::new(const_ptr_void_type(span)),
             })],

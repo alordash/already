@@ -6,15 +6,19 @@ pub fn standalone_get() -> i32 {
 pub struct Struct;
 
 impl Struct {
+    #[code_reload::hotreload_assoc]
     pub fn get(&self) -> i32 {
         20
     }
+    #[code_reload::hotreload_assoc]
     pub fn mut_get(&mut self) -> i32 {
         30
     }
+    #[code_reload::hotreload_assoc]
     pub fn consume_get(self) -> i32 {
         40
     }
+    #[code_reload::hotreload_assoc]
     pub fn static_get() -> i32 {
         50
     }
@@ -28,15 +32,19 @@ pub trait Trait {
 }
 
 impl Trait for Struct {
+    #[code_reload::hotreload_assoc]
     fn trait_get(&self) -> i32 {
         60
     }
+    #[code_reload::hotreload_assoc]
     fn trait_mut_get(&mut self) -> i32 {
         70
     }
+    #[code_reload::hotreload_assoc]
     fn trait_consume_get(self) -> i32 {
         80
     }
+    #[code_reload::hotreload_assoc]
     fn trait_static_get() -> i32 {
         90
     }
