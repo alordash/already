@@ -2,7 +2,7 @@ use super::*;
 use arc_swap::ArcSwap;
 use std::sync::{Arc, OnceLock};
 
-static DYNAMIC_LIBRARY: OnceLock<Arc<ArcSwap<LibraryWrapper>>> = OnceLock::new();
+pub static DYNAMIC_LIBRARY: OnceLock<Arc<ArcSwap<LibraryWrapper>>> = OnceLock::new();
 
 #[doc(hidden)]
 pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]) -> FnGuard<F> {

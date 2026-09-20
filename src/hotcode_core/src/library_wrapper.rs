@@ -1,5 +1,5 @@
 use super::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::{Arc, LazyLock};
 use std::time::Instant;
 
@@ -42,6 +42,10 @@ impl LibraryWrapper {
         };
 
         return result;
+    }
+
+    pub fn library_copy_path(&self) -> &Path {
+        &self.library_copy_path
     }
 
     pub fn get<F>(self: Arc<Self>, symbol_name: &'static [u8]) -> FnGuard<F> {
