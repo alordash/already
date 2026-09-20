@@ -1,2 +1,0 @@
-If `cargo build` in this folder finishes without errors then it means `code_reload` is working correctly.  
-Except [broken_runtime](broken_runtime) - things from there shouldn't compile, they're unsupported.

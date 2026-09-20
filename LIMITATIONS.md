@@ -1,4 +1,4 @@
-# List of `code_reload` usage limitations (for now)
+# List of `already` usage limitations (for now)
 
 ## Common:
 

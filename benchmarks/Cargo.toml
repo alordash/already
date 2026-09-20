@@ -4,15 +4,19 @@ version = "0.1.0"
 edition = "2024"
 
 [lib]
-crate-type = ["cdylib", "lib"]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+already = { workspace = true }
+
+[dev-dependencies]
+criterion = "0.7.0"
+walkdir = "2.5.0"
 
 [[bench]]
 name = "fibonacci"
 harness = false
 
-[dependencies]
-code_reload = { path = "../src/code_reload", features = ["runtime"] }
-criterion = "0.7.0"
-
-[build-dependencies]
-code_reload = { path = "../src/code_reload", features = ["runtime"] }
+[lints.clippy]
+needless_return = "allow"
+match_like_matches_macro = "allow"

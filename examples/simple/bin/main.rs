@@ -1,11 +1,9 @@
-use simple::add;
+use simple::foo;
 
 fn main() {
-    let a = 3;
-    let b = 4;
     loop {
-        let sum = add(a, b);
-        println!("{a} + {b} = {sum}");
-        std::thread::sleep(std::time::Duration::from_secs(1));
+        let result = foo(10);
+        dbg!(result);
+        std::thread::sleep(core::time::Duration::from_millis(1700));
     }
 }

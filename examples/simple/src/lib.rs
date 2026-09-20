@@ -1,7 +1,6 @@
-use code_reload::hotreload;
+use already::hotreload;
 
 #[hotreload]
-pub fn add(mut a: i32, b: i32) -> i32 {
-    a += 1;
-    a + b
+pub fn foo(v: i32) -> i32 {
+    v + 1
 }
