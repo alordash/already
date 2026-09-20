@@ -23,7 +23,7 @@ jobs:
         rust:
           - stable
           - nightly
-    name: ${{ matrix.rust }}
+    name: ${{ matrix.rust }} - ${{ matrix.os }}
     env:
       CARGO_FLAGS: ${{ matrix.rust == 'nightly' && '--all-features' || '' }}
     steps:
