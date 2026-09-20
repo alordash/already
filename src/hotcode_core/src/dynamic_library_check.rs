@@ -1,9 +1,5 @@
-// TODO - unsloppify, support linux
-#![allow(unused)]
-#![allow(clippy::upper_case_acronyms)]
-#![allow(non_snake_case)]
-use std::ptr;
-use std::sync::{LazyLock, OnceLock};
+// TODO - unsloppify
+use std::sync::LazyLock;
 
 #[cfg(windows)]
 mod windows;
@@ -12,11 +8,11 @@ mod windows;
 mod unix;
 
 #[cfg(windows)]
-static IS_DLL: LazyLock<bool> = LazyLock::new(windows::slow_is_outside_dynamic_library);
+static IS_DYNAMIC_LIBRARY: LazyLock<bool> = LazyLock::new(windows::slow_is_outside_dynamic_library);
 
 #[cfg(unix)]
 static IS_DLL: LazyLock<bool> = LazyLock::new(unix::slow_is_outside_dynamic_library);
 
 pub fn is_outside_dynamic_library() -> bool {
-    *IS_DLL
+    *IS_DYNAMIC_LIBRARY
 }
