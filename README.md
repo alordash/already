@@ -1,4 +1,4 @@
-# code_reload (⚠ WIP)
+# already (⚠ WIP)
 
 Library for hotreload in Rust. Hotreload allows you to change your code without restarting application.
 
@@ -16,11 +16,11 @@ Usage with [bevy example](https://bevy.org/examples/2d-rendering/move-sprite/):
 Your crate must be `lib` crate. You can have separate binaries in it though.  
 Steps to use this library:
 
-1. Add `code_reload` to `Cargo.toml` dependencies:
+1. Add `already` to `Cargo.toml` dependencies:
 
 ```toml
 [dependencies]
-code_reload = "*"
+already = "*"
 ```
 
 2. Add `crate-type = ["cdylib", "lib"]` to `lib` section in `Cargo.toml` (your crate must produce dynamic library):
@@ -33,7 +33,7 @@ crate-type = ["cdylib", "lib"]
 3. Label function you want to make hotreloadable with `#[hotreload]` attribute:
 
 ```rust
-use code_reload::hotreload;
+use already::hotreload;
 
 #[hotreload]
 fn add(a: i32, b: i32) -> i32 {
@@ -61,14 +61,14 @@ Your crate must be `lib` crate. You can have separate binaries in it though.
 This approach also uses [build script](https://doc.rust-lang.org/cargo/reference/build-scripts.html) (later on that).  
 Steps to use this library:
 
-1. Add `code_reload` with `runtime` feature to `Cargo.toml` dependencies and build dependencies:
+1. Add `already` with `runtime` feature to `Cargo.toml` dependencies and build dependencies:
 
 ```toml
 [dependencies]
-code_reload = { version = "*", features = ["runtime"] }
+already = { version = "*", features = ["runtime"] }
 
 [build-dependencies]
-code_reload = { version = "*", features = ["runtime"] }
+already = { version = "*", features = ["runtime"] }
 ```
 
 2. Add `crate-type = ["cdylib", "lib"]` to `lib` section in `Cargo.toml` (your crate must produce dynamic library):
@@ -78,21 +78,21 @@ code_reload = { version = "*", features = ["runtime"] }
 crate-type = ["cdylib", "lib"]
 ```
 
-3. Add `code_reload::runtime::build()` to your build script (the `build.rs` file in the root of your crate). This
+3. Add `already::runtime::build()` to your build script (the `build.rs` file in the root of your crate). This
    function
    parses your code and generates dynamic library wrapper structures that hold pointers to hotreloadable functions.
 
 ```rust
 // build.rs
 fn main() {
-    code_reload::runtime::build();
+    already::runtime::build();
 }
 ```
 
-4. Add `code_reload::runtime::add_runtime!();` anywhere in your crate's root (presumably in `lib.rs` file, if you're not
+4. Add `already::runtime::add_runtime!();` anywhere in your crate's root (presumably in `lib.rs` file, if you're not
    sure see [examples](examples)).
 
-5. Add `code_reload::runtime::start_watchers!(your_crate_name)` somewhere in your binary's `main` function. This spawns
+5. Add `already::runtime::start_watchers!(your_crate_name)` somewhere in your binary's `main` function. This spawns
    watcher
    that looks after your dynamic library file and reloads dynamic library when it changes. `your_crate_name` is either
    `package.name` from `Cargo.toml` or just `crate` if your binary is located in the same place as your library's code.
@@ -100,7 +100,7 @@ fn main() {
 ```rust
 // bin.rs
 fn main() {
-    code_reload::runtime::start_watchers!(your_crate_name);
+    already::runtime::start_watchers!(your_crate_name);
     // your code
 }
 ```
@@ -108,7 +108,7 @@ fn main() {
 6. Label function you want to make hotreloadable with `#[hotreload(runtime)]` attribute:
 
 ```rust
-use code_reload::hotreload;
+use already::hotreload;
 
 #[hotreload(runtime)]
 fn add(a: i32, b: i32) -> i32 {
@@ -145,4 +145,4 @@ runtime hotreload fibonacci time:   [19.498 ns 19.692 ns 19.917 ns]
 
 #### // TODO
 
-- [ ] write about `code_reload::runtime::build` for tests and separate directories
+- [ ] write about `already::runtime::build` for tests and separate directories

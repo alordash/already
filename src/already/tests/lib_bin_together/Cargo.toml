@@ -1,0 +1,18 @@
+# TODO - check that lib and bin together work even without CARGO_TARGET_DIR env var
+
+[package]
+name = "lib_bin_together"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+already = { path = "../.." }
+
+[workspace]
+
+[[bin]]
+name = "bin_together"
+path = "bin/bin_together.rs"
