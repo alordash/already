@@ -15,6 +15,7 @@ pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<LibraryW
             }) if paths.iter().any(|x| x == static_library_path) => {}
             _ => return,
         }
+        println!("RELOADING");
         let new_library = LibraryWrapper::new(static_library_path.to_owned());
         shared_library_wrapper.store(Arc::new(new_library));
     })
