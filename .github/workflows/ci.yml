@@ -52,7 +52,7 @@ jobs:
           cargo check ${{ env.CARGO_FLAGS }}
 
   msrv:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: MSRV
     container:
       image: rust:1.88.0
@@ -64,7 +64,7 @@ jobs:
         run: cargo build
 
   fmt:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Code format
     container:
       image: rust:1.88.0
