@@ -1,4 +1,4 @@
-# List of `already` usage limitations (for now)
+# List of `hotcode` usage limitations (for now)
 
 ## Common:
 

@@ -40,7 +40,7 @@ fn copy_dynamic_lib() -> std::io::Result<()> {
         .parent()
         .unwrap_or_else(|| panic!("Unable to get crate build directory."));
 
-    let library_platform_name = already::get_platform_library_file_name(env!("CARGO_PKG_NAME"));
+    let library_platform_name = hotcode::get_platform_library_file_name(env!("CARGO_PKG_NAME"));
 
     let dynamic_library_path =
         find_dynamic_lib(crate_build_dir, current_dir, &library_platform_name);

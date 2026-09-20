@@ -1,18 +1,18 @@
 [workspace]
 resolver = "3"
 members = [
-    "src/already",
-    "src/already_core",
-    "src/already_proc_macro",
+    "src/hotcode",
+    "src/hotcode_core",
+    "src/hotcode_proc_macro",
     "examples/simple",
     "benchmarks"
 ]
 
 [workspace.dependencies]
 # TODO - is there a way to specify this versions only in one place? or this is meaningless?
-already = { version = "0.2.0", path = "src/already" }
-already_core = { version = "0.2.0", path = "src/already_core" }
-already_proc_macro = { version = "0.2.0", path = "src/already_proc_macro" }
+hotcode = { version = "0.2.0", path = "src/hotcode" }
+hotcode_core = { version = "0.2.0", path = "src/hotcode_core" }
+hotcode_proc_macro = { version = "0.2.0", path = "src/hotcode_proc_macro" }
 
 proc-macro2 = { version = "1.0.95", features = ["span-locations"] }
 quote = "1.0.40"

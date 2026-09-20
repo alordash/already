@@ -1,0 +1,12 @@
+[package]
+name = "bin_separate"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "bin_separate"
+path = "src/bin_separate.rs"
+
+[dependencies]
+hotcode = { workspace = true }
+lib_separate = { path = "../lib_separate" }

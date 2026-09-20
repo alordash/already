@@ -1,0 +1,16 @@
+[package]
+name = "hotcode"
+version = "0.2.0"
+edition = "2024"
+
+[dependencies]
+hotcode_core = { workspace = true }
+hotcode_proc_macro = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+dircpy = { workspace = true }
+
+[lints.clippy]
+needless_return = "allow"
+match_like_matches_macro = "allow"

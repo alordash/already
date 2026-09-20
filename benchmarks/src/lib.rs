@@ -2,7 +2,7 @@ pub fn regular_slow_fibonacci(n: u128) -> u128 {
     slow_fibonacci(n)
 }
 
-#[already::hotreload]
+#[hotcode::hotreload]
 pub fn hotreload_slow_fibonacci(n: u128) -> u128 {
     slow_fibonacci(n)
 }
@@ -11,7 +11,7 @@ pub fn regular_fast_fibonacci(n: u128) -> u128 {
     fast_fibonacci(n)
 }
 
-#[already::hotreload]
+#[hotcode::hotreload]
 pub fn hotreload_fast_fibonacci(n: u128) -> u128 {
     fast_fibonacci(n)
 }
