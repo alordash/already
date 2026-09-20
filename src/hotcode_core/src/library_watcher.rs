@@ -10,8 +10,9 @@ pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<LibraryW
         match &event {
             Ok(notify::Event {
                 kind: notify::EventKind::Create(_) | notify::EventKind::Modify(_),
+                paths,
                 ..
-            }) => {}
+            }) if paths.iter().any(|x| x == static_library_path) => {}
             _ => return,
         }
         let new_library = LibraryWrapper::new(static_library_path.to_owned());
@@ -19,8 +20,11 @@ pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<LibraryW
     })
     .unwrap();
 
+    let parent_library_path = static_library_path.parent().unwrap_or_else(|| {
+        panic!("Unable to get parent directory of library path '{static_library_path:?}'.")
+    });
     watcher
-        .watch(static_library_path, notify::RecursiveMode::NonRecursive)
+        .watch(parent_library_path, notify::RecursiveMode::NonRecursive)
         .unwrap();
 
     core::mem::forget(watcher);
