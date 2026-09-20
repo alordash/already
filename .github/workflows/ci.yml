@@ -32,7 +32,7 @@ jobs:
       - name: Build
         run: cargo build ${{ matrix.cargo_args }}
       - name: Test
-        run: cargo test --all-generation ${{ matrix.cargo_args }}
+        run: cargo test --all-targets ${{ matrix.cargo_args }}
       - name: Doc
         run: cargo doc --no-deps ${{ matrix.cargo_args }}
       - name: Clippy
@@ -41,7 +41,7 @@ jobs:
           cargo clippy --all-targets --workspace ${{ matrix.cargo_args }} -- -D warnings
       - name: Reproducibility
         if: matrix.rust_version == 'nightly'
-        run: env RUSTFLAGS="--cfg reprocheck" cargo check --all-generation ${{ matrix.cargo_args }}
+        run: env RUSTFLAGS="--cfg reprocheck" cargo check --all-targets ${{ matrix.cargo_args }}
       - name: Minver
         if: matrix.rust_version == 'nightly'
         run: |
