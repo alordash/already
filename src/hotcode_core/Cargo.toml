@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 libloading = { workspace = true }
 arc-swap = { workspace = true }
-notify = { workspace = true }
+notify-debouncer-full = { workspace = true }
 
 [lints.clippy]
 needless_return = "allow"

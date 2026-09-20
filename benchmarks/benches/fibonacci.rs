@@ -29,7 +29,7 @@ criterion_group!(benches, fibonacci_benchmark);
 criterion_main!(benches);
 
 fn copy_dynamic_lib() -> std::io::Result<()> {
-    println!("Searching dynamic library...");
+    println!("Searching for dynamic library...");
     let current_exe = std::env::current_exe()?;
     let current_dir = current_exe
         .parent()
