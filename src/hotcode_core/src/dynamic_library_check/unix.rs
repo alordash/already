@@ -3,20 +3,20 @@ use std::ffi::c_void;
 // Define the libc dladdr binding structure
 #[repr(C)]
 pub struct DlInfo {
-    pub dli_fname: *const std::libc::c_char,
+    pub dli_fname: *const libc::c_char,
     pub dli_fbase: *mut c_void,
-    pub dli_sname: *const std::libc::c_char,
+    pub dli_sname: *const libc::c_char,
     pub dli_saddr: *mut c_void,
 }
 
-extern "C" {
+unsafe extern "C" {
     fn dladdr(addr: *const c_void, info: *mut DlInfo) -> std::os::raw::c_int;
 }
 
 pub fn slow_is_outside_dynamic_library() -> bool {
     let mut info: DlInfo = unsafe { std::mem::zeroed() };
     // Pass a pointer to our current function
-    let current_fn_ptr = is_inside_shared_library as *const c_void;
+    let current_fn_ptr = slow_is_outside_dynamic_library as *const c_void;
 
     unsafe {
         if dladdr(current_fn_ptr, &mut info) != 0 {
