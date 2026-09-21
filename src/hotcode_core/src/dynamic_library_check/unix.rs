@@ -1,5 +1,4 @@
 use std::ffi::c_void;
-use std::os::unix::ffi::OsStrExt;
 
 pub fn slow_is_outside_dynamic_library() -> bool {
     let mut info = libc::Dl_info {
