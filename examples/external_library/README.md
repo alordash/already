@@ -8,8 +8,8 @@ rebuild library with `cargo build --lib` without stopping running binary. You sh
 
 ```
 ...
-[examples\simple\bin\main.rs:6:9] result = 2
+[examples\external_library\bin\main.rs:6:9] result = 2
 # code change and rebuild
-[examples\simple\bin\main.rs:6:9] result = 4
+[examples\external_library\bin\main.rs:6:9] result = 4
 ...
 ```

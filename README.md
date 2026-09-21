@@ -20,7 +20,7 @@ Add `hotcode` to your `dependencies`:
 hotcode = "*"
 ```
 
-List `cdylib` in your crate's type list:
+Add `cdylib` to your library crate types:
 
 ```toml
 [lib]
