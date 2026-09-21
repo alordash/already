@@ -30,7 +30,7 @@ pub fn slow_is_outside_dynamic_library() -> bool {
                 let current_exe = std::env::current_exe()
                     .map(|p| p.to_string_lossy().to_string())
                     .unwrap_or_default();
-                return path_str == current_exe;
+                return current_exe.ends_with(path_str.as_ref());
             }
         }
     }
