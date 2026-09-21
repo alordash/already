@@ -29,7 +29,7 @@ Add `cdylib` to your library crate types:
 crate-type = ["cdylib", "lib"]
 ```
 
-Apply `hotcode::hotreload` attribute to your function:
+Add `hotcode::hotreload` attribute to your function:
 
 ```rust
 #[hotcode::hotreload]
@@ -38,10 +38,10 @@ fn add(a: i32, b: i32) -> i32 {
 }
 ```
 
-Run your application, change code of hot-reloaded function and rebuild library using `cargo build --lib`. You should see
-that function is behaving differently.
+Run your application, change the code of this function and rebuild your library using `cargo build --lib`. The function
+behavior will change without application restart.
 
-For more information about features and caveats of `hotcode` refer to [crate documentation](https://docs.rs/hotcode).
+For more information about `hotcode` features refer to [crate documentation](https://docs.rs/hotcode).
 
 ## Examples
 
