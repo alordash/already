@@ -1,37 +1,16 @@
-use hotcode::*;
-use lib_separate::*;
-use std::sync::Arc;
+use supported_functions::*;
 
-fn main() -> Result<(), std::io::Error> {
-    let old_values = get_values();
-    let expected_old_values = [
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-        26, 27, 28, 29, 30, 31,
-    ];
-    dbg!(old_values);
-    assert_eq!(old_values, expected_old_values);
-
-    let old_library = Arc::downgrade(&provide_library_wrapper(&get_platform_library_file_name(
-        "lib_together",
-    )));
-
-    println!();
-    let _sync = std::io::stdin().read_line(&mut String::new())?;
-
-    // Wait for old library to be updated and unloaded
-    while old_library.strong_count() > 0 {
-        std::hint::spin_loop();
+fn main() {
+    loop {
+        let result = get_values();
+        let formatted_result: String = result
+            .into_iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        println!("[{formatted_result}]");
+        std::thread::sleep(core::time::Duration::from_millis(2000));
     }
-
-    let new_values = get_values();
-    let expected_new_values = [
-        10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200,
-        210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310,
-    ];
-    dbg!(new_values);
-    assert_eq!(new_values, expected_new_values);
-
-    Ok(())
 }
 
 fn get_values() -> [i32; 31] {

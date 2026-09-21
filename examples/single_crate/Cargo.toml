@@ -1,13 +1,15 @@
 [package]
-name = "simple"
+name = "single_target"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib", "lib"]
 
 [dependencies]
-hotcode = { workspace = true }
+hotcode = { path = "../../src/hotcode" }
+
+[workspace]
 
 [[bin]]
 name = "main"

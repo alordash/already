@@ -3,9 +3,7 @@ resolver = "3"
 members = [
     "src/hotcode",
     "src/hotcode_core",
-    "src/hotcode_proc_macro",
-    "examples/simple",
-    "benchmarks"
+    "src/hotcode_proc_macro"
 ]
 
 [workspace.dependencies]
