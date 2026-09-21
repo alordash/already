@@ -10,7 +10,7 @@ mod unix;
 static IS_OUTSIDE_DYNAMIC_LIBRARY: LazyLock<bool> = LazyLock::new(windows::slow_is_outside_dynamic_library);
 
 #[cfg(unix)]
-static IS_DYNAMIC_LIBRARY: LazyLock<bool> = LazyLock::new(unix::slow_is_outside_dynamic_library);
+static IS_OUTSIDE_DYNAMIC_LIBRARY: LazyLock<bool> = LazyLock::new(unix::slow_is_outside_dynamic_library);
 
 pub fn is_outside_dynamic_library() -> bool {
     *IS_OUTSIDE_DYNAMIC_LIBRARY
