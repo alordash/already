@@ -13,17 +13,11 @@ fn hotreload_works() -> std::io::Result<()> {
     cargo_clean_rebuild_in(target_dir.as_ref(), PACKAGE_NAME)?;
 
     // Act
-    let old_lib_txt = std::fs::read_to_string(&target_lib)?;
-    dbg!(old_lib_txt);
-    
     let mut test_run_process = cargo_run_in(target_dir.as_ref(), "bin_together")?;
     test_run_process.wait_for_input_from_stdout()?;
-    std::fs::copy(updated_lib, &target_lib)?;
+    std::fs::copy(updated_lib, target_lib)?;
     cargo_clean_rebuild_in(target_dir.as_ref(), PACKAGE_NAME)?;
     test_run_process.send_enter_to_stdin()?;
-    
-    let new_lib_txt = std::fs::read_to_string(&target_lib)?;
-    dbg!(new_lib_txt);
 
     // Assert
     test_run_process.wait_for_successful_exit()?;

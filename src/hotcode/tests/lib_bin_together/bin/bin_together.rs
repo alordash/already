@@ -22,6 +22,7 @@ fn main() -> Result<(), std::io::Error> {
         std::hint::spin_loop();
     }
     dbg!(old_library.strong_count(), old_library.as_ptr());
+    std::thread::sleep(std::time::Duration::from_millis(1000));
 
     let new_library = Arc::downgrade(&provide_library_wrapper(&get_platform_library_file_name(
         "lib_bin_together",
