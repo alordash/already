@@ -22,11 +22,11 @@ pub fn slow_is_outside_dynamic_library() -> bool {
             return true;
         };
 
-        let c_str = std::ffi::CStr::from_ptr(info.dli_fname);
+        let module_name_bytes = std::ffi::CStr::from_ptr(info.dli_fname).to_bytes();
         let result = current_exe_path
             .as_os_str()
-            .as_bytes()
-            .ends_with(c_str.to_bytes());
+            .as_encoded_bytes()
+            .ends_with(module_name_bytes);
         return result;
     }
 }
