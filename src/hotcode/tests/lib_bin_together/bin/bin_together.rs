@@ -13,15 +13,20 @@ fn main() -> Result<(), std::io::Error> {
     )));
 
     println!();
-    dbg!(old_library.strong_count());
+    dbg!(old_library.strong_count(), old_library.as_ptr());
     let _sync = std::io::stdin().read_line(&mut String::new())?;
 
     // Wait for old library to be updated and unloaded
-    dbg!(old_library.strong_count());
+    dbg!(old_library.strong_count(), old_library.as_ptr());
     while old_library.strong_count() > 0 {
         std::hint::spin_loop();
     }
-    dbg!(old_library.strong_count());
+    dbg!(old_library.strong_count(), old_library.as_ptr());
+
+    let new_library = Arc::downgrade(&provide_library_wrapper(&get_platform_library_file_name(
+        "lib_bin_together",
+    )));
+    dbg!(new_library.strong_count(), new_library.as_ptr());
 
     let new_values = get_values();
     let expected_new_values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110];
