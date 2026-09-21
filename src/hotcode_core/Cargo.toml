@@ -2,6 +2,7 @@
 name = "hotcode_core"
 version = "0.2.0"
 edition = "2024"
+rust-version = "1.89.0"
 
 [dependencies]
 libloading = { workspace = true }
