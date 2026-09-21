@@ -1,7 +1,6 @@
 use std::ptr;
 
 type HMODULE = *mut std::os::raw::c_void;
-type LPVOID = *mut std::os::raw::c_void;
 
 unsafe extern "system" {
     fn GetModuleHandleExW(dwFlags: u32, lpModuleName: *const u16, phModule: *mut HMODULE) -> i32;
