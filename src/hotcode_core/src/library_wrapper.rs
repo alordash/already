@@ -5,7 +5,7 @@ use std::time::Instant;
 
 pub struct LibraryWrapper {
     library_copy_path: PathBuf,
-    fn_ptrs_map: GrowHashMap<&'static [u8], *mut core::ffi::c_void>,
+    fn_ptrs_map: GrowMap<&'static [u8], *mut core::ffi::c_void>,
     maybe_inner: Option<libloading::Library>,
 }
 
@@ -37,7 +37,7 @@ impl LibraryWrapper {
         };
         let result = Self {
             library_copy_path,
-            fn_ptrs_map: GrowHashMap::new(),
+            fn_ptrs_map: GrowMap::new(),
             maybe_inner: Some(inner),
         };
 

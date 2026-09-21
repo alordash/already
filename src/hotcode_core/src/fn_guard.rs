@@ -2,7 +2,6 @@ use super::*;
 use std::ops::Deref;
 use std::sync::Arc;
 
-// TODO - write test that checks that FnGuard's drop leads to LibraryWrapper drop if Arc is exhausted
 pub struct FnGuard<F> {
     f: F,
     _library_arc: Arc<LibraryWrapper>,

@@ -1,5 +1,3 @@
-// TODO - more test cases: where lib and bin are in same crate, where lib and bin are separate crate
-
 mod build_utils;
 use build_utils::*;
 
