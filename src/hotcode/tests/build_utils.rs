@@ -43,9 +43,7 @@ pub fn cargo_clean_rebuild_in(
 }
 
 #[allow(unused)]
-pub fn cargo_clean_workspace_rebuild_in(
-    target_dir: &Path,
-) -> std::io::Result<()> {
+pub fn cargo_clean_workspace_rebuild_in(target_dir: &Path) -> std::io::Result<()> {
     std::process::Command::new("cargo")
         .args(["clean", "--workspace"])
         .current_dir(target_dir)
