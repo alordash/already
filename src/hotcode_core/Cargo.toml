@@ -12,5 +12,8 @@ notify-debouncer-full = { workspace = true }
 needless_return = "allow"
 match_like_matches_macro = "allow"
 
+[target.'cfg(windows)'.dependencies]
+winapi = { workspace = true }
+
 [target.'cfg(unix)'.dependencies]
 libc = { workspace = true }
