@@ -13,15 +13,12 @@ fn main() -> Result<(), std::io::Error> {
     )));
 
     println!();
-    dbg!(old_library.strong_count());
     let _sync = std::io::stdin().read_line(&mut String::new())?;
 
     // Wait for old library to be updated and unloaded
-    dbg!(old_library.strong_count());
     while old_library.strong_count() > 0 {
         std::hint::spin_loop();
     }
-    dbg!(old_library.strong_count());
 
     let new_values = get_values();
     let expected_new_values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110];
