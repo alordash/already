@@ -18,6 +18,7 @@ fn main() -> Result<(), std::io::Error> {
 
     // Wait for old library to be updated and unloaded
     dbg!(old_library.strong_count(), old_library.as_ptr());
+    dbg!(old_library.upgrade().map(|x| x.library_copy_path().to_owned()));
     while old_library.strong_count() > 0 {
         std::hint::spin_loop();
     }
@@ -27,6 +28,7 @@ fn main() -> Result<(), std::io::Error> {
     let new_library = Arc::downgrade(&provide_library_wrapper(&get_platform_library_file_name(
         "lib_bin_together",
     )));
+    dbg!(new_library.upgrade().map(|x| x.library_copy_path().to_owned()));
     dbg!(new_library.strong_count(), new_library.as_ptr());
 
     let new_values = get_values();
