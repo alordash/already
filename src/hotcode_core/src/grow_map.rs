@@ -23,14 +23,9 @@ where
     K: Eq + Hash,
 {
     pub fn get_or_insert_with<F: FnOnce() -> V>(&self, key: K, default: F) -> &V {
-        let read = self.inner.read().unwrap();
-        if let Some(existing) = read.get(&key) {
-            // SAFETY: created entries can not be removed or changed due to this struct's API, so it
-            // is safe to treat references to its entries as immutable. `IndexMap` also guarantees
-            // that order of entries can not change.
-            return unsafe { core::mem::transmute::<&V, &V>(existing) };
+        if let Some(existing) = self.get(&key) {
+            return existing;
         }
-        drop(read);
         let mut write = self.inner.write().unwrap();
         let new_value = default();
         let created = write.entry(key).insert_entry(new_value);
@@ -38,5 +33,16 @@ where
         // is safe to treat references to its entries as immutable. `IndexMap` also guarantees
         // that order of entries can not change.
         return unsafe { core::mem::transmute::<&V, &V>(created.get()) };
+    }
+
+    pub fn get(&self, key: &K) -> Option<&V> {
+        let read = self.inner.read().unwrap();
+        if let Some(existing) = read.get(key) {
+            // SAFETY: created entries can not be removed or changed due to this struct's API, so it
+            // is safe to treat references to its entries as immutable. `IndexMap` also guarantees
+            // that order of entries can not change.
+            return Some(unsafe { core::mem::transmute::<&V, &V>(existing) });
+        }
+        return None;
     }
 }

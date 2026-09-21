@@ -1,5 +1,5 @@
 [package]
-name = "library"
+name = "lib_bar"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,4 +7,5 @@ edition = "2024"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
+lib_foo = { workspace = true }
 hotcode = { workspace = true }

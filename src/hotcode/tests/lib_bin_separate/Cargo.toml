@@ -3,4 +3,5 @@ resolver = "3"
 members = ["lib_separate", "bin_separate"]
 
 [workspace.dependencies]
+lib_separate = { path = "lib_separate" }
 hotcode = { path = "../.." }

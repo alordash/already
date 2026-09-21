@@ -12,7 +12,7 @@ fn main() -> Result<(), std::io::Error> {
     assert_eq!(old_values, expected_old_values);
 
     let old_library = Arc::downgrade(&provide_library_wrapper(&get_platform_library_file_name(
-        "lib_together",
+        "lib_separate",
     )));
 
     println!();

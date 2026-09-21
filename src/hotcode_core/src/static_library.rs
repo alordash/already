@@ -1,8 +1,9 @@
 use super::*;
 use arc_swap::ArcSwap;
-use std::sync::{Arc, OnceLock};
+use std::sync::{Arc, LazyLock};
 
-pub static DYNAMIC_LIBRARY: OnceLock<Arc<ArcSwap<LibraryWrapper>>> = OnceLock::new();
+pub static DYNAMIC_LIBRARIES_MAP: LazyLock<GrowMap<String, Arc<ArcSwap<LibraryWrapper>>>> =
+    LazyLock::new(GrowMap::new);
 
 #[doc(hidden)]
 pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]) -> FnGuard<F> {
@@ -13,8 +14,8 @@ pub fn provide_fn<F>(library_file_name: &'static str, symbol_name: &'static [u8]
 
 #[doc(hidden)]
 pub fn provide_library_wrapper(library_file_name: &str) -> Arc<LibraryWrapper> {
-    let library = DYNAMIC_LIBRARY
-        .get_or_init(|| {
+    let library = DYNAMIC_LIBRARIES_MAP
+        .get_or_insert_with(library_file_name.to_owned(), || {
             let library_source_path = std::env::current_exe()
                 .unwrap_or_else(|e| panic!("Unable to get current exe path: {e:?}"))
                 .parent()
@@ -25,7 +26,11 @@ pub fn provide_library_wrapper(library_file_name: &str) -> Arc<LibraryWrapper> {
                 library_source_path.clone(),
             )));
 
-            library_watcher::spawn(library_source_path, shared_library_wrapper.clone());
+            library_watcher::spawn(
+                library_file_name.to_owned(),
+                library_source_path,
+                shared_library_wrapper.clone(),
+            );
             return shared_library_wrapper;
         })
         .load_full();

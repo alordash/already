@@ -11,7 +11,7 @@ Library for hotreload in Rust.
 This library exposes `hotreload` attribute that can be applied to standalone or implementation functions. This attribute
 makes function hot-reloadable: it's code and behavior can be changed on the fly while the application is still running.
 
-Supports 🐧Linux, 🍏MacOS and 🪟Windows.
+💻 Works on **Linux**, **macOS** and **Windows**.
 
 ## Usage
 
@@ -33,7 +33,7 @@ Apply `hotcode::hotreload` attribute to your function:
 
 ```rust
 #[hotcode::hotreload]
-fn sum(a: i32, b: i32) -> i32 {
+fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 ```
@@ -45,7 +45,7 @@ For more information about features and caveats of `hotcode` refer to [crate doc
 
 ## Examples
 
-Examples of project structure and supported functions can be seen in [`examples`](examples) folder.
+Examples can be seen in [`examples`](examples) folder.
 
 # Minimum Supported Rust Version (MSRV)
 

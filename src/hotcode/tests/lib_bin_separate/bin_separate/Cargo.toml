@@ -8,5 +8,5 @@ name = "bin_separate"
 path = "src/bin_separate.rs"
 
 [dependencies]
+lib_separate = { workspace = true }
 hotcode = { workspace = true }
-lib_separate = { path = "../lib_separate" }

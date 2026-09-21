@@ -1,0 +1,8 @@
+[workspace]
+resolver = "3"
+members = ["lib_foo", "lib_bar", "multiple_bin"]
+
+[workspace.dependencies]
+lib_foo = { path = "lib_foo" }
+lib_bar = { path = "lib_bar" }
+hotcode = { path = "../.." }

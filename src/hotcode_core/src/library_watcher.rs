@@ -1,18 +1,25 @@
 use crate::LibraryWrapper;
-use crate::static_library::DYNAMIC_LIBRARY;
+use crate::static_library::DYNAMIC_LIBRARIES_MAP;
 use arc_swap::ArcSwap;
 use notify_debouncer_full::{DebounceEventResult, notify};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
 
-pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<LibraryWrapper>>) {
+pub fn spawn(
+    library_file_name_string: String,
+    library_path: PathBuf,
+    shared_library_wrapper: Arc<ArcSwap<LibraryWrapper>>,
+) {
     let static_library_path: &Path = library_path.leak();
     let mut watcher = notify_debouncer_full::new_debouncer(
         Duration::from_millis(100),
         None,
         move |events_result: DebounceEventResult| {
-            let Some(current_lib) = DYNAMIC_LIBRARY.get().map(|x| x.load()) else {
+            let Some(current_lib) = DYNAMIC_LIBRARIES_MAP
+                .get(&library_file_name_string)
+                .map(|x| x.load())
+            else {
                 return;
             };
             let debounced_events = events_result.unwrap_or_else(|e| {
@@ -48,7 +55,7 @@ pub fn spawn(library_path: PathBuf, shared_library_wrapper: Arc<ArcSwap<LibraryW
     .unwrap();
 
     let parent_library_path = static_library_path.parent().unwrap_or_else(|| {
-        panic!("Unable to get parent directory of library path '{static_library_path:?}'.")
+        panic!("Unable to get parent directory of library path {static_library_path:?}.")
     });
     watcher
         .watch(parent_library_path, notify::RecursiveMode::NonRecursive)

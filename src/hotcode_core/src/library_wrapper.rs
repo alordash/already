@@ -13,6 +13,7 @@ static TIME_START: LazyLock<Instant> = LazyLock::new(Instant::now);
 
 impl LibraryWrapper {
     pub fn new(library_source_path: PathBuf) -> Self {
+        dbg!("LOADING", &library_source_path);
         let tick_stamp = TIME_START.elapsed().as_millis();
         let library_copy_path = {
             let mut library_copy_path_base = library_source_path.clone();
@@ -28,11 +29,11 @@ impl LibraryWrapper {
         };
         std::fs::copy(&library_source_path, &library_copy_path)
             .unwrap_or_else(|e| panic!(
-                "Unable to copy library with tick stamp from '{library_source_path:?}' to '{library_copy_path:?}': {e:?}"));
+                "Unable to copy library with tick stamp from {library_source_path:?} to {library_copy_path:?}: {e:?}"));
 
         let inner = unsafe {
             libloading::Library::new(library_copy_path.clone()).unwrap_or_else(|e| {
-                panic!("Error opening shared library '{library_copy_path:?}' in directory '{library_copy_path:?}': {e:?}")
+                panic!("Error opening shared library {library_copy_path:?} in directory {library_copy_path:?}: {e:?}")
             })
         };
         let result = Self {

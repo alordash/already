@@ -1,0 +1,13 @@
+[package]
+name = "multiple_bin"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "multiple_bin"
+path = "src/multiple_bin.rs"
+
+[dependencies]
+lib_foo = { workspace = true }
+lib_bar = { workspace = true }
+hotcode = { workspace = true }

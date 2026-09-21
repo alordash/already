@@ -1,8 +1,8 @@
-use single_target::sum;
+use single_crate::add;
 
 fn main() {
     loop {
-        let result = sum(1, 1);
+        let result = add(1, 1);
         dbg!(result);
         std::thread::sleep(core::time::Duration::from_millis(2000));
     }

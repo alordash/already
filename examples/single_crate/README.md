@@ -7,8 +7,8 @@ Run project with `cargo run`, then make changes to [`src/lib.rs`](src/lib.rs) an
 
 ```
 ...
-[examples\single_target\bin\main.rs:6:9] result = 2
+[examples\single_crate\bin\main.rs:6:9] result = 2
 # code change and rebuild
-[examples\single_target\bin\main.rs:6:9] result = 4
+[examples\single_crate\bin\main.rs:6:9] result = 4
 ...
 ```

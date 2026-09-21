@@ -1,0 +1,8 @@
+[package]
+name = "binary"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+first_library = { workspace = true }
+second_library = { workspace = true }

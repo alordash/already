@@ -26,12 +26,28 @@ pub fn copy_test_project(test_project_name: &'static str) -> std::io::Result<Tem
     return Ok(target_dir);
 }
 
+#[allow(unused)]
 pub fn cargo_clean_rebuild_in(
     target_dir: &Path,
     test_project_name: &'static str,
 ) -> std::io::Result<()> {
     std::process::Command::new("cargo")
         .args(["clean", "-p", test_project_name])
+        .current_dir(target_dir)
+        .status()?;
+    std::process::Command::new("cargo")
+        .args(["build", "--lib"])
+        .current_dir(target_dir)
+        .status()?;
+    Ok(())
+}
+
+#[allow(unused)]
+pub fn cargo_clean_workspace_rebuild_in(
+    target_dir: &Path,
+) -> std::io::Result<()> {
+    std::process::Command::new("cargo")
+        .args(["clean", "--workspace"])
         .current_dir(target_dir)
         .status()?;
     std::process::Command::new("cargo")

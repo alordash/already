@@ -4,3 +4,4 @@ members = ["binary", "library"]
 
 [workspace.dependencies]
 library = { path = "library" }
+hotcode = { path = "../../src/hotcode" }
