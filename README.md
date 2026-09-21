@@ -11,6 +11,8 @@ Library for hotreload in Rust.
 This library exposes `hotreload` attribute that can be applied to standalone or implementation functions. This attribute
 makes function hot-reloadable: it's code and behavior can be changed on the fly while the application is still running.
 
+Supports 🐧Linux, 🍏MacOS and 🪟Windows.
+
 ## Usage
 
 Add `hotcode` to your `dependencies`:
